@@ -1,4 +1,4 @@
-package com;
+package com.findme.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -22,9 +22,9 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+@Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@Configuration
 @ComponentScan(basePackages = {"com"})
 public class AppConfig implements WebMvcConfigurer {
 
@@ -69,10 +69,10 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("oracle.jdbc.driver.OracleDriver");
-        dataSource.setUrl("jdbc:oracle:thin:@gromcode-lessons.cugxfi8tgmxw.us-east-2.rds.amazonaws.com:1521:ORCL");
-        dataSource.setUsername("main");
-        dataSource.setPassword("Anton4ik147536951");
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl("jdbc:postgresql://postgresdb.cugxfi8tgmxw.us-east-2.rds.amazonaws.com:5432/posgresdb");
+        dataSource.setUsername("name");
+        dataSource.setPassword("pass");
         return dataSource;
     }
 
