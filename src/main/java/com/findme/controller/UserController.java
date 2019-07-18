@@ -25,10 +25,10 @@ public class UserController {
         try {
             User user = userService.get(Long.parseLong(userId));
             if (user == null)
-                throw new NotFoundException("User is not found.");
+                throw new NotFoundException("404: User is not found.");
             model.addAttribute("user", userService.get(Long.parseLong(userId)));
         } catch (NumberFormatException e){
-            throw new BadRequestException("You write incorrect id.");
+            throw new BadRequestException("400: You write incorrect id.");
         }
         return "profile";
     }

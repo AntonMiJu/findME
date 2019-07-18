@@ -14,7 +14,7 @@ public abstract class GeneralDAO<T> {
         try {
             return entityManager.find(tClass, id);
         } catch (Exception e) {
-            throw new SystemException("Finding file is failed.");
+            throw new SystemException("500: Finding file is failed.");
         }
     }
 
@@ -22,7 +22,7 @@ public abstract class GeneralDAO<T> {
         try {
             entityManager.persist(t);
         } catch (Exception e) {
-            throw new SystemException("Saving file is failed.");
+            throw new SystemException("500: Saving file is failed.");
         }
     }
 
@@ -30,7 +30,7 @@ public abstract class GeneralDAO<T> {
         try {
             return entityManager.merge(t);
         } catch (Exception e) {
-            throw new SystemException("Updating file is failed.");
+            throw new SystemException("500: Updating file is failed.");
         }
     }
 
@@ -39,7 +39,7 @@ public abstract class GeneralDAO<T> {
             T t = entityManager.find(tClass, id);
             entityManager.remove(t);
         } catch (Exception e) {
-            throw new SystemException("Deleting file is failed.");
+            throw new SystemException("500: Deleting file is failed.");
         }
     }
 }
