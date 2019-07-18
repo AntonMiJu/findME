@@ -1,6 +1,7 @@
 package com.findme.service;
 
 import com.findme.dao.PostDAO;
+import com.findme.exceptions.SystemException;
 import com.findme.models.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,19 +15,19 @@ public class PostService {
         this.postDAO = postDAO;
     }
 
-    public Post get(Long id) {
+    public Post get(Long id) throws SystemException {
         return postDAO.get(id, Post.class);
     }
 
-    public void save(Post post) {
+    public void save(Post post) throws SystemException {
         postDAO.save(post);
     }
 
-    public Post update(Post post) {
+    public Post update(Post post) throws SystemException {
         return postDAO.update(post);
     }
 
-    public void delete(Long id) {
+    public void delete(Long id) throws SystemException {
         postDAO.delete(id, Post.class);
     }
 }

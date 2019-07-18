@@ -20,10 +20,14 @@ public class UserController {
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(Model model, @PathVariable String userId){
-        User user = userService.get(Long.parseLong(userId));
-        if (user == null)
-            return "notFoundException";
-        model.addAttribute("user",userService.get(Long.parseLong(userId)));
+        try {
+            User user = userService.get(Long.parseLong(userId));
+            if (user == null)
+                return "notFoundException";
+            model.addAttribute("user", userService.get(Long.parseLong(userId)));
+        } catch (Exception e){
+            return "systemException";
+        }
         return "profile";
     }
 }
