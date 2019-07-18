@@ -1,5 +1,7 @@
 package com.findme.controller;
 
+import com.findme.exceptions.BadRequestException;
+import com.findme.exceptions.NotFoundException;
 import com.findme.models.User;
 import com.findme.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +21,14 @@ public class UserController {
     }
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
-    public String profile(Model model, @PathVariable String userId){
+    public String profile(Model model, @PathVariable String userId) throws Exception{
         try {
             User user = userService.get(Long.parseLong(userId));
             if (user == null)
-                return "notFoundException";
+                throw new NotFoundException("User is not found.");
             model.addAttribute("user", userService.get(Long.parseLong(userId)));
-        } catch (Exception e){
-            return "systemException";
+        } catch (NumberFormatException e){
+            throw new BadRequestException("You write incorrect id.");
         }
         return "profile";
     }

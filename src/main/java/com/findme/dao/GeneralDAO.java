@@ -14,7 +14,7 @@ public abstract class GeneralDAO<T> {
         try {
             return entityManager.find(tClass, id);
         } catch (Exception e) {
-            throw new SystemException("Finding file " + id + " is failed.");
+            throw new SystemException("Finding file is failed.");
         }
     }
 
