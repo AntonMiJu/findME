@@ -25,7 +25,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan(basePackages = {"com"})
+@ComponentScan(basePackages = {"com.findme"})
 public class AppConfig implements WebMvcConfigurer {
 
     @Autowired
@@ -58,7 +58,7 @@ public class AppConfig implements WebMvcConfigurer {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
         LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
         entityManager.setDataSource(dataSource());
-        entityManager.setPackagesToScan(new String[]{"com"});
+        entityManager.setPackagesToScan(new String[]{"com.findme"});
 
         JpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
         entityManager.setJpaVendorAdapter(adapter);
@@ -70,8 +70,8 @@ public class AppConfig implements WebMvcConfigurer {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://postgresdb.cugxfi8tgmxw.us-east-2.rds.amazonaws.com:5432/posgresdb");
-        dataSource.setUsername("name");
+        dataSource.setUrl("jdbc:postgresql://postgresdb.cugxfi8tgmxw.us-east-2.rds.amazonaws.com:5432/posgresDB");
+        dataSource.setUsername("login");
         dataSource.setPassword("pass");
         return dataSource;
     }

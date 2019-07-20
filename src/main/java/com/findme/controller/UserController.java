@@ -22,18 +22,17 @@ public class UserController {
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     public String profile(Model model, @PathVariable String userId) {
+        User user = null;
         try {
-            User user = userService.get(Long.parseLong(userId));
-            if (user == null)
-                throw new NotFoundException("404: User is not found.");
-            model.addAttribute("user", userService.get(Long.parseLong(userId)));
+            user = userService.get(Long.parseLong(userId));
         } catch (NumberFormatException e){
             return "badRequestException";
-        } catch (NotFoundException e){
-            return "notFoundException";
         } catch (SystemException e){
             return "systemException";
         }
+        if (user == null)
+            return "notFoundException";
+        model.addAttribute("user", user);
         return "profile";
     }
 }

@@ -96,7 +96,7 @@ public class User {
         return university;
     }
 
-    @OneToMany(mappedBy = "userFrom ")
+    @OneToMany(mappedBy = "userFrom")
     public List<Message> getMessagesSent() {
         return messagesSent;
     }
