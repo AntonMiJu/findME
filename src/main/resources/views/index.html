@@ -5,10 +5,60 @@
 </head>
 
 <body>
-<div>
-    <div>
-        <h1>Welcome to Find me</h1>
-    </div>
+<div align="center">
+    <h1>Welcome to Find me</h1>
 </div>
+<hr>
+<div align="center">
+    <form id="registration-form">
+        <p>firstName :  <input type="text" name="firstName" required></p>
+        <p>lastName :  <input type="text" name="lastName" required></p>
+        <p>phone :  <input type="text" name="phone" required></p>
+        <p>email :  <input type="text" name="email" required></p>
+        <p>country :  <input type="text" name="country" required></p>
+        <p>town :  <input type="text" name="town" required></p>
+        <p>age :  <input type="text" name="age" required></p>
+        <p>relationshipStatus :  <input type="text" name="relationshipStatus" required></p>
+        <p>religion :  <input type="text" name="religion" required></p>
+        <p>school :  <input type="text" name="school" required></p>
+        <p>university :  <input type="text" name="university" required></p>
+
+        <br>
+        <button type="submit">Register</button>
+    </form>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </body>
+
+<script>
+    $("registration-form").submit(function (e) {
+        $.ajax({
+            url:"register-user",
+            type: "POST",
+            data: $('#registration-form').serialize(),
+            success: function success(data) {
+                alert("Registration completed");
+            },
+            error: function (xhr) {
+                alert("Registration failed");
+            }
+        });
+    });
+
+    // $("test-ajax").click(function () {
+    //     debugger;
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "/test-ajax",
+    //         data: {
+    //         },
+    //         success: function success() {
+    //             alert("success!");
+    //         },
+    //         error: function error() {
+    //             alert("error!");
+    //         }
+    //     });
+    // });
+</script>
 </html>

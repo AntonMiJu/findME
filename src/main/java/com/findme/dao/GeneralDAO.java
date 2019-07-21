@@ -1,23 +1,23 @@
 package com.findme.dao;
 
+import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
+import javax.persistence.PersistenceException;
 
-@Repository
-@Transactional
 public abstract class GeneralDAO<T> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public T get(Long id, Class<T> tClass) throws SystemException {
+    public T get(Long id, Class<T> tClass) throws NotFoundException, SystemException {
         try {
             return entityManager.find(tClass, id);
-        } catch (Exception e) {
+        }catch (PersistenceException e){
+            throw new NotFoundException("404: File is not found.");
+        }catch (Exception e) {
             throw new SystemException("500: Finding file is failed.");
         }
     }

@@ -1,6 +1,7 @@
 package com.findme.service;
 
 import com.findme.dao.PostDAO;
+import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Post;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class PostService {
         this.postDAO = postDAO;
     }
 
-    public Post get(Long id) throws SystemException {
+    public Post get(Long id) throws NotFoundException, SystemException {
         return postDAO.get(id, Post.class);
     }
 

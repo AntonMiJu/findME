@@ -11,6 +11,7 @@ public class User {
     private String firstName;
     private String lastName;
     private String phone;
+    private String email;
     //TODO from existed data
     private String country;
     private String town;
@@ -49,6 +50,11 @@ public class User {
     @Column(name = "PHONE")
     public String getPhone() {
         return phone;
+    }
+
+    @Column(name = "EMAIL")
+    public String getEmail() {
+        return email;
     }
 
     @Column(name = "COUNTRY")
@@ -120,6 +126,10 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void setCountry(String country) {

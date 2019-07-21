@@ -1,6 +1,7 @@
 package com.findme.service;
 
 import com.findme.dao.UserDAO;
+import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,15 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public User get(Long id) throws SystemException {
+    public User findUserByPhone(String phone) throws SystemException{
+        return userDAO.findUserByPhone(phone);
+    }
+
+    public User findUserByEmail(String email) throws SystemException{
+        return userDAO.findUserByEmail(email);
+    }
+
+    public User get(Long id) throws NotFoundException,SystemException {
         return userDAO.get(id, User.class);
     }
 

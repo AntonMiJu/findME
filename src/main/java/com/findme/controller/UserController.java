@@ -7,9 +7,12 @@ import com.findme.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.Date;
 
 @Controller
 public class UserController {
@@ -25,14 +28,28 @@ public class UserController {
         User user = null;
         try {
             user = userService.get(Long.parseLong(userId));
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             return "badRequestException";
+        } catch (SystemException e) {
+            return "systemException";
+        } catch (NotFoundException e) {
+            return "notFoundException";
+        }
+        model.addAttribute("user", user);
+        return "profile";
+    }
+
+    @RequestMapping(path = "/register-user", method = RequestMethod.POST)
+    public String registerUser(@ModelAttribute User user) {
+        try {
+            if (userService.findUserByEmail(user.getEmail()) != null || userService.findUserByPhone(user.getPhone()) != null)
+                return "badRequestException";
+            user.setDateRegistered(new Date());
+            user.setDateLastActive(new Date());
+            userService.save(user);
         } catch (SystemException e){
             return "systemException";
         }
-        if (user == null)
-            return "notFoundException";
-        model.addAttribute("user", user);
         return "profile";
     }
 }
