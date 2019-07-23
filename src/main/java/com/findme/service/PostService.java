@@ -20,8 +20,8 @@ public class PostService {
         return postDAO.get(id, Post.class);
     }
 
-    public void save(Post post) throws SystemException {
-        postDAO.save(post);
+    public Post save(Post post) throws SystemException {
+        return postDAO.save(post);
     }
 
     public Post update(Post post) throws SystemException {

@@ -31,9 +31,9 @@
 </body>
 
 <script>
-    $("registration-form").submit(function (e) {
+    $("#registration-form").submit(function (e) {
         $.ajax({
-            url:"register-user",
+            url:"/register-user",
             type: "POST",
             data: $('#registration-form').serialize(),
             success: function success(data) {

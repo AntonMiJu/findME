@@ -2,11 +2,13 @@ package com.findme.dao;
 
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+@Transactional
 public abstract class GeneralDAO<T> {
 
     @PersistenceContext
@@ -22,9 +24,10 @@ public abstract class GeneralDAO<T> {
         }
     }
 
-    public void save(T t) throws SystemException {
+    public T save(T t) throws SystemException {
         try {
             entityManager.persist(t);
+            return t;
         } catch (Exception e) {
             throw new SystemException("500: Saving file is failed.");
         }

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "MESSAGES")
+@Table(name = "USERS")
 public class User {
     private Long id;
     private String firstName;

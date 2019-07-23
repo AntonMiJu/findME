@@ -28,8 +28,8 @@ public class UserService {
         return userDAO.get(id, User.class);
     }
 
-    public void save(User user) throws SystemException {
-        userDAO.save(user);
+    public User save(User user) throws SystemException {
+        return userDAO.save(user);
     }
 
     public User update(User user) throws SystemException {
