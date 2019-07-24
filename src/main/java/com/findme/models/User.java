@@ -82,7 +82,7 @@ public class User {
         return dateLastActive;
     }
 
-    @Column(name = "RELASHIONSHIP_STATUS")
+    @Column(name = "RELATIONSHIP_STATUS")
     public String getRelationshipStatus() {
         return relationshipStatus;
     }
