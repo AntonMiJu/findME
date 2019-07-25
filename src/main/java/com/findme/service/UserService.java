@@ -1,11 +1,14 @@
 package com.findme.service;
 
 import com.findme.dao.UserDAO;
+import com.findme.exceptions.BadRequestException;
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class UserService {
@@ -16,19 +19,15 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public User findUserByPhone(String phone) throws SystemException{
-        return userDAO.findUserByPhone(phone);
-    }
-
-    public User findUserByEmail(String email) throws SystemException{
-        return userDAO.findUserByEmail(email);
-    }
-
     public User get(Long id) throws NotFoundException,SystemException {
         return userDAO.get(id, User.class);
     }
 
-    public User save(User user) throws SystemException {
+    public User save(User user) throws SystemException, BadRequestException {
+        if (userDAO.findUserByPhoneOrEmail(user.getEmail(), user.getPhone()) != null)
+            throw new BadRequestException("Save failed");
+        user.setDateRegistered(new Date());
+        user.setDateLastActive(new Date());
         return userDAO.save(user);
     }
 

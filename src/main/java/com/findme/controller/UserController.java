@@ -1,5 +1,6 @@
 package com.findme.controller;
 
+import com.findme.exceptions.BadRequestException;
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.User;
@@ -42,13 +43,11 @@ public class UserController {
     @RequestMapping(path = "/register-user", method = RequestMethod.POST)
     public String registerUser(@ModelAttribute User user) {
         try {
-            if (userService.findUserByEmail(user.getEmail()) != null || userService.findUserByPhone(user.getPhone()) != null)
-                return "badRequestException";
-            user.setDateRegistered(new Date());
-            user.setDateLastActive(new Date());
             userService.save(user);
         } catch (SystemException e){
             return "systemException";
+        } catch(BadRequestException e){
+            return "badRequestException";
         }
         return "profile";
     }
