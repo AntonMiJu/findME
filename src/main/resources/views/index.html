@@ -10,11 +10,19 @@
 </div>
 <hr>
 <div align="center">
+    <form id="login-form">
+        <p>Email: <input type="text" name="email"></p>
+        <p>Password: <input type="text" name="password"></p>
+        <button id="login" type="submit">Login</button>
+    </form>
+    <button id="logout" onclick="logout()">Logout</button>
+    <hr>
     <form id="registration-form">
         <p>firstName :  <input type="text" name="firstName" required></p>
         <p>lastName :  <input type="text" name="lastName" required></p>
-        <p>phone :  <input type="text" name="phone" required></p>
         <p>email :  <input type="text" name="email" required></p>
+        <p>password :  <input type="text" name="password" required></p>
+        <p>phone :  <input type="text" name="phone" required></p>
         <p>country :  <input type="text" name="country" required></p>
         <p>town :  <input type="text" name="town" required></p>
         <p>age :  <input type="text" name="age" required></p>
@@ -45,20 +53,32 @@
         });
     });
 
-    // $("test-ajax").click(function () {
-    //     debugger;
-    //     $.ajax({
-    //         type: "GET",
-    //         url: "/test-ajax",
-    //         data: {
-    //         },
-    //         success: function success() {
-    //             alert("success!");
-    //         },
-    //         error: function error() {
-    //             alert("error!");
-    //         }
-    //     });
-    // });
+    $("#login-form").submit(function (e) {
+        $.ajax({
+            url:"/login",
+            type:"GET",
+            data: $("#login-form").serialize(),
+            success: function success(data) {
+                alert("Login completed");
+            },
+            error: function (xhr) {
+                alert("Login failed");
+            }
+        });
+    });
+
+    function logout() {
+        $.ajax({
+            url:"/logout",
+            type:"GET",
+            data: null,
+            success: function success(data) {
+                alert("Logout completed");
+            },
+            error: function (xhr) {
+                alert("Logout failed");
+            }
+        });
+    }
 </script>
 </html>

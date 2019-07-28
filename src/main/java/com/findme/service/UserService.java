@@ -23,6 +23,13 @@ public class UserService {
         return userDAO.get(id, User.class);
     }
 
+    public User login(String email, String password) throws SystemException, NotFoundException{
+        User user = userDAO.findUserByEmailAndPassword(email,password);
+        if (user == null)
+            throw new NotFoundException("404: User not found");
+        return user;
+    }
+
     public User save(User user) throws SystemException, BadRequestException {
         if (userDAO.findUserByPhoneOrEmail(user.getEmail(), user.getPhone()) != null)
             throw new BadRequestException("Save failed");

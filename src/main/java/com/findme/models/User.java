@@ -12,6 +12,7 @@ public class User {
     private String lastName;
     private String phone;
     private String email;
+    private String password;
     //TODO from existed data
     private String country;
     private String town;
@@ -55,6 +56,11 @@ public class User {
     @Column(name = "EMAIL")
     public String getEmail() {
         return email;
+    }
+
+    @Column(name = "PASSWORD")
+    public String getPassword() {
+        return password;
     }
 
     @Column(name = "COUNTRY")
@@ -130,6 +136,10 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setCountry(String country) {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 
 @Controller
@@ -50,5 +51,31 @@ public class UserController {
             return "badRequestException";
         }
         return "profile";
+    }
+
+    @RequestMapping(path = "/login", method = RequestMethod.GET)
+    public String login(HttpSession session, @ModelAttribute User user){
+        try {
+                user = userService.login(user.getEmail(),user.getPassword());
+        } catch (NotFoundException e){
+            return "notFoundException";
+        } catch (SystemException e){
+            return "systemException";
+        }
+        session.setAttribute("user", user);
+        return "index";
+    }
+
+    @RequestMapping(path = "/logout", method = RequestMethod.GET)
+    public String logout(HttpSession session){
+        try {
+            User user = (User) session.getAttribute("user");
+            user.setDateLastActive(new Date());
+            userService.update(user);
+            session.setAttribute("user", null);
+            return "index";
+        } catch (SystemException e){
+            return "systemException";
+        }
     }
 }
