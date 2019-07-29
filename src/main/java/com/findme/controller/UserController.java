@@ -8,10 +8,7 @@ import com.findme.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
@@ -54,7 +51,8 @@ public class UserController {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String login(HttpSession session, @PathVariable String email,@PathVariable String password){
+    public String login(HttpSession session, @RequestParam(name = "email") String email
+            , @RequestParam(name = "password") String password){
         User user = null;
         try {
                 user = userService.login(email,password);

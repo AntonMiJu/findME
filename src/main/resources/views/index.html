@@ -11,8 +11,8 @@
 <hr>
 <div align="center">
     <form id="login-form">
-        <p>Email: <input type="text" name="email"></p>
-        <p>Password: <input type="text" name="password"></p>
+        <p>Email: <input id="email" type="text" name="email" required></p>
+        <p>Password: <input id="password" type="text" name="password" required></p>
         <button id="login" type="submit">Login</button>
     </form>
     <button id="logout" onclick="logout()">Logout</button>
@@ -57,8 +57,11 @@
     $("#login-form").submit(function (e) {
         $.ajax({
             url:"/login",
-            type:"GET",
-            data: $("#login-form").serialize(),
+            type:"POST",
+            data: {
+                email : document.getElementById("email").value,
+                password : document.getElementById("password").value
+            },
             success: function success(data) {
                 alert("Login completed");
             },
@@ -66,7 +69,6 @@
                 alert("Login failed");
             }
         });
-        return false;
     });
 
     function logout() {
