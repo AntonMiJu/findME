@@ -53,12 +53,12 @@ public class UserController {
         return "profile";
     }
 
-    @RequestMapping(path = "/login", method = RequestMethod.GET)
+    @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(HttpSession session, @ModelAttribute User user){
         try {
                 user = userService.login(user.getEmail(),user.getPassword());
         } catch (NotFoundException e){
-            return "notFoundException";
+            return "badRequestException";
         } catch (SystemException e){
             return "systemException";
         }
