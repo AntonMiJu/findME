@@ -54,11 +54,12 @@ public class UserController {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String login(HttpSession session, @ModelAttribute User user){
+    public String login(HttpSession session, @PathVariable String email,@PathVariable String password){
+        User user = null;
         try {
-                user = userService.login(user.getEmail(),user.getPassword());
+                user = userService.login(email,password);
         } catch (NotFoundException e){
-            return "badRequestException";
+            return "forbiddenException";
         } catch (SystemException e){
             return "systemException";
         }
