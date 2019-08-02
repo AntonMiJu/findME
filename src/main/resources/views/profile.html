@@ -11,6 +11,9 @@
         <div>
             <button class="btn">Send message</button>
         </div>
+        
+        <p th:text="${relationshipStatus}"></p>
+        <button id="relationship" onclick="changeRelationship()">Change relationship</button>
     </div>
 
     <div class="right">
@@ -21,7 +24,24 @@
         <p th:text="${user.country}"></p>
         <p th:text="${user.town}"></p>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </body>
+
+<script>
+    function changeRelationship() {
+        $.ajax({
+            url:"/send_request",
+            type:"PUT",
+            data: null,
+            success: function success(data) {
+                alert("Logout completed");
+            },
+            error: function (xhr) {
+                alert("Logout failed");
+            }
+        });
+    }
+</script>
 
 <style>
     .left{
