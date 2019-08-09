@@ -3,7 +3,6 @@ package com.findme.service;
 import com.findme.dao.RelationshipDAO;
 import com.findme.dao.UserDAO;
 import com.findme.exceptions.BadRequestException;
-import com.findme.exceptions.ForbiddenException;
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Relationship;

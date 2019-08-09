@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpSession;
 
 @Controller
+@Interceptors(ValidateInterceptor.class)
 public class RelationshipController {
     private UserService userService;
     private RelationshipService relationshipService;

@@ -30,7 +30,7 @@
 <script>
     function changeRelationship() {
         $.ajax({
-            url:"/send_request",
+            url:"/user/"+${user.id}+"/send_request",
             type:"PUT",
             data: null,
             success: function success(data) {
