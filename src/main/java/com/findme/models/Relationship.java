@@ -1,11 +1,12 @@
 package com.findme.models;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "RELATIONSHIPS")
-public class Relationship {
+public class Relationship implements Serializable {
     private User userFromId;
     private User userToId;
     private RelationshipStatus status;
