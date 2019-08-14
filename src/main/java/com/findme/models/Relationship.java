@@ -1,6 +1,7 @@
 package com.findme.models;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "RELATIONSHIPS")
@@ -8,15 +9,7 @@ public class Relationship {
     private User userFromId;
     private User userToId;
     private RelationshipStatus status;
-
-    public Relationship() {
-    }
-
-    public Relationship(User userFromId, User userToId, RelationshipStatus status) {
-        this.userFromId = userFromId;
-        this.userToId = userToId;
-        this.status = status;
-    }
+    private Date startOfRelationships;
 
     @Id
     @OneToOne
@@ -37,6 +30,11 @@ public class Relationship {
         return status;
     }
 
+    @Column(name = "START_OF_RLT")
+    public Date getStartOfRelationships() {
+        return startOfRelationships;
+    }
+
     public void setUserFromId(User userFromId) {
         this.userFromId = userFromId;
     }
@@ -47,5 +45,9 @@ public class Relationship {
 
     public void setStatus(RelationshipStatus status) {
         this.status = status;
+    }
+
+    public void setStartOfRelationships(Date startOfRelationships) {
+        this.startOfRelationships = startOfRelationships;
     }
 }

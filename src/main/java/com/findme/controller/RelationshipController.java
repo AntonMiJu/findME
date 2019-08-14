@@ -33,13 +33,10 @@ public class RelationshipController {
     @RequestMapping(path = "/user/{userId}/send_request", method = RequestMethod.POST)
     public String sendRequest(HttpSession session, Model model, @PathVariable Long userId) {
         try {
-            validateLogin(session);
             relationshipService.save(((User) session.getAttribute("user")).getId(), userId);
             model.addAttribute("user", userService.get(userId));
         } catch (SystemException e) {
             return "systemException";
-        } catch (ForbiddenException e) {
-            return "forbiddenException";
         } catch (NotFoundException e) {
             return "notFoundException";
         } catch (BadRequestException e){
@@ -51,13 +48,25 @@ public class RelationshipController {
     @RequestMapping(path = "/user/{userId}/update_request", method = RequestMethod.PUT)
     public String updateRequest(HttpSession session, Model model, @PathVariable Long userId, @RequestParam(name = "status") String status) {
         try {
-            validateLogin(session);
             relationshipService.update(((User) session.getAttribute("user")).getId(), userId, status);
             model.addAttribute("user", userService.get(userId));
         } catch (SystemException e) {
             return "systemException";
-        } catch (ForbiddenException e) {
-            return "forbiddenException";
+        } catch (NotFoundException e) {
+            return "notFoundException";
+        } catch (BadRequestException e){
+            return "badRequestException";
+        }
+        return "profile";
+    }
+
+    @RequestMapping(path = "/user/{userId}/delete", method = RequestMethod.PUT)
+    public String deleteFromFriends(HttpSession session, Model model, @PathVariable Long userId) {
+        try {
+            relationshipService.delete(((User) session.getAttribute("user")).getId(), userId);
+            model.addAttribute("user", userService.get(userId));
+        } catch (SystemException e) {
+            return "systemException";
         } catch (NotFoundException e) {
             return "notFoundException";
         } catch (BadRequestException e){
@@ -69,12 +78,9 @@ public class RelationshipController {
     @RequestMapping(path = "/income_requests", method = RequestMethod.GET)
     public String getIncomeRequests(HttpSession session){
         try {
-            validateLogin(session);
             relationshipService.getIncomeRequests(((User)session.getAttribute("user")).getId());
         } catch (SystemException e){
             return "systemException";
-        } catch (ForbiddenException e){
-            return "forbiddenException";
         }
         return "profile";
     }
@@ -82,18 +88,10 @@ public class RelationshipController {
     @RequestMapping(path = "/outcome_requests", method = RequestMethod.GET)
     public String getOutcomeRequests(HttpSession session){
         try {
-            validateLogin(session);
             relationshipService.getOutcomeRequests(((User)session.getAttribute("user")).getId());
         } catch (SystemException e){
             return "systemException";
-        } catch (ForbiddenException e){
-            return "forbiddenException";
         }
         return "profile";
-    }
-
-    private void validateLogin(HttpSession session) throws ForbiddenException{
-        if (session.getAttribute("user") == null)
-            throw new ForbiddenException("You must be logined");
     }
 }

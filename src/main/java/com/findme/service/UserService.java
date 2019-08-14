@@ -32,7 +32,7 @@ public class UserService {
 
     public User save(User user) throws SystemException, BadRequestException {
         if (userDAO.findUserByPhoneOrEmail(user.getEmail(), user.getPhone()) != null)
-            throw new BadRequestException("Save failed");
+            throw new BadRequestException("400: Save failed");
         user.setDateRegistered(new Date());
         user.setDateLastActive(new Date());
         return userDAO.save(user);

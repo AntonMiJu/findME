@@ -17,6 +17,8 @@ public class RelationshipDAO extends GeneralDAO<Relationship> {
             "AND STATUS = 'REQUEST_SENT'";
     private static final String getOutcomeRequests = "SELECT USER_TO_ID FROM RELATIONSHIPS WHERE USER_FROM_ID = ?" +
             "AND STATUS = 'REQUEST_SENT'";
+    private static final String getFriendsList = "SELECT * FROM RELATIONSHIPS WHERE (USER_FROM_ID = ?" +
+            " OR USER_TO_ID = ? ) AND STATUS = 'FRIENDS'";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -42,6 +44,17 @@ public class RelationshipDAO extends GeneralDAO<Relationship> {
         try {
             return entityManager.createNativeQuery(getOutcomeRequests, Relationship.class)
                     .setParameter(1, userId)
+                    .getResultList();
+        } catch (Exception e){
+            throw new SystemException("500: Something gone wrong.");
+        }
+    }
+
+    public List<Relationship> getFriendsList(Long userId) throws SystemException{
+        try {
+            return entityManager.createNativeQuery(getFriendsList, Relationship.class)
+                    .setParameter(1, userId)
+                    .setParameter(2,userId)
                     .getResultList();
         } catch (Exception e){
             throw new SystemException("500: Something gone wrong.");

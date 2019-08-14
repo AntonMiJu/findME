@@ -1,9 +1,9 @@
 package com.findme.models;
 
 public enum RelationshipStatus {
-    REQUEST_SENT,
-    REQUEST_DECLINED,
+    REQUESTED,
+    REJECTED,
     FRIENDS,
-    DECLINED_FROM,
-    DECLINED_TO
+    DELETED,
+    CANCELED
 }
