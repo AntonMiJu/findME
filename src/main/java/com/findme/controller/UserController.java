@@ -64,17 +64,18 @@ public class UserController {
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(HttpSession session, @RequestParam(name = "email") String email
-            , @RequestParam(name = "password") String password){
+            , @RequestParam(name = "password") String password, Model model){
         User user = null;
         try {
-                user = userService.login(email,password);
+            user = userService.login(email,password);
         } catch (NotFoundException e){
             return "forbiddenException";
         } catch (SystemException e){
             return "systemException";
         }
         session.setAttribute("user", user);
-        return "index";
+        model.addAttribute("user", user);
+        return "profile";
     }
 
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
@@ -85,10 +86,10 @@ public class UserController {
             user.setDateLastActive(new Date());
             userService.update(user);
             session.setAttribute("user", null);
-            return "index";
         } catch (SystemException e){
             return "systemException";
         }
+        return "index";
     }
 
     private void validateLogin(HttpSession session) throws ForbiddenException{

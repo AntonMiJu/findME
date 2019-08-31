@@ -2,36 +2,65 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Find me</title>
+    <link rel="stylesheet" href="css/profile.css">
 </head>
 
 <body>
-    <div class="left">
+<div class="left">
+    <div class="photo">
         <h1>Photo</h1>
+    </div>
 
-        <div>
-            <button class="btn">Send message</button>
-        </div>
-        
-        <p th:text="${relationshipStatus}"></p>
+    <p>
+        <button>Send message</button>
+    </p>
+
+    <p th:text="${relationshipStatus}"></p>
+    <p>
         <button id="relationship" onclick="changeRelationship()">Change relationship</button>
-    </div>
+    </p>
+    <p>
+        <button id="create-post" onclick="window.location.href = '/findme/views/create_post.html';">Create post</button>
+    </p>
+    <p>
+        <button id="logout" onclick="logout()">Logout</button>
+    </p>
+</div>
 
-    <div class="right">
-        User information:
-        <p th:text="${user.firstName}"></p>
-        <p th:text="${user.lastName}"></p>
-        <p th:text="${user.phone}"></p>
-        <p th:text="${user.country}"></p>
-        <p th:text="${user.town}"></p>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<div class="right">
+    User information:
+    <p th:text="${user.firstName}"></p>
+    <p th:text="${user.lastName}"></p>
+    <p th:text="${user.phone}"></p>
+    <p th:text="${user.country}"></p>
+    <p th:text="${user.town}"></p>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </body>
 
 <script>
+    /*<![CDATA[*/
+    var userId = /*[[${user.getId}]]*/ 'default';
+    /*]]>*/
+
     function changeRelationship() {
         $.ajax({
-            url:"/user/"+${user.id}+"/send_request",
-            type:"PUT",
+            url: "/user/" + userId + "/send_request",
+            type: "PUT",
+            data: null,
+            success: function success(data) {
+                alert("Logout completed");
+            },
+            error: function (xhr) {
+                alert("Logout failed");
+            }
+        });
+    }
+
+    function logout() {
+        $.ajax({
+            url: "/logout",
+            type: "GET",
             data: null,
             success: function success(data) {
                 alert("Logout completed");
@@ -42,21 +71,4 @@
         });
     }
 </script>
-
-<style>
-    .left{
-        float: left;
-        width: 200px;
-        height: 300px;
-        border-style: solid;
-    }
-
-    .right{
-        margin-left: 300px;
-    }
-
-    .btn{
-        margin-top: 230px;
-    }
-</style>
 </html>

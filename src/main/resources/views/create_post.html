@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Find me</title>
+    <link rel="stylesheet" href="css/create_post.css">
+</head>
+
+<body>
+<div class="center">
+    <form id="post-form">
+        <p><input type="text" name="location" placeholder="Location"></p>
+        <p><textarea placeholder="Message" name="message" cols="50" rows="10"></textarea></p>
+        <button id="create" type="submit">Create</button>
+    </form>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</body>
+
+<script>
+    $("#post-form").submit(function (e) {
+        $.ajax({
+            url:"/post/{userId}/create_post",
+            type: "POST",
+            data: $('#post-form').serialize(),
+            success: function success(data) {
+                alert("Post created");
+            },
+            error: function (xhr) {
+                alert("Wrong logic");
+            }
+        });
+        return false;
+    });
+</script>
+</html>

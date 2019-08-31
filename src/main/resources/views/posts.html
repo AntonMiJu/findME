@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Find me</title>
+    <link rel="stylesheet" href="css/posts.css">
+</head>
+
+<body>
+<div class="top">
+    <h1 th:text="${post.userPosted}" style="text-align: left"></h1>
+    <p th:text="${post.datePosted}"></p>
+    <p th:text="${post.location}"></p>
+</div>
+<div class="center">
+    <p th:text="${post.message}"></p>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</body>
+
+<script>
+    /*<![CDATA[*/
+    var userId = /*[[${user.getId}]]*/ 'default';
+    /*]]>*/
+</script>
+</html>

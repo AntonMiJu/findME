@@ -7,38 +7,56 @@
 <body>
 <div align="center">
     <h1>Welcome to Find me</h1>
+    <link rel="stylesheet" href="css/index.css">
 </div>
-<hr>
-<div align="center">
+
+<div class="center">
     <form id="login-form">
-        <p>Email: <input id="email" type="text" name="email" required></p>
-        <p>Password: <input id="password" type="text" name="password" required></p>
+        <p><input id="email" type="text" placeholder="Username" required></p>
+        <p><input id="password" type="password" placeholder="Password" required></p>
         <button id="login" type="submit">Login</button>
     </form>
-    <button id="logout" onclick="logout()">Logout</button>
-    <hr>
-    <form id="registration-form">
-        <p>firstName :  <input type="text" name="firstName" required></p>
-        <p>lastName :  <input type="text" name="lastName" required></p>
-        <p>email :  <input type="text" name="email" required></p>
-        <p>password :  <input type="text" name="password" required></p>
-        <p>phone :  <input type="text" name="phone" required></p>
-        <p>country :  <input type="text" name="country" required></p>
-        <p>town :  <input type="text" name="town" required></p>
-        <p>age :  <input type="text" name="age" required></p>
-        <p>relationshipStatus :  <input type="text" name="relationshipStatus" required></p>
-        <p>religion :  <input type="text" name="religion" required></p>
-        <p>school :  <input type="text" name="school" required></p>
-        <p>university :  <input type="text" name="university" required></p>
+    <p id="register-block"><br>Want to register? <a href="#">Click here</a></p>
 
+    <form id="registration-form" hidden>
+        <p><input type="text" name="firstName" placeholder="First name *" required></p>
+        <p><input type="text" name="lastName" placeholder="Last name *" required></p>
+        <p><input type="text" name="email" placeholder="E-mail *" required></p>
+        <p><input type="text" name="password" placeholder="Password *" required></p>
+        <p><input type="text" name="phone" placeholder="Phone *" required></p>
+        <p><input type="text" name="country" placeholder="Country *" required></p>
+        <p><input type="text" name="town" placeholder="Town"></p>
+        <p><input type="text" name="age" placeholder="Age"></p>
+        <p><input type="text" name="relationshipStatus" placeholder="Relationship status"></p>
+        <p><input type="text" name="religion" placeholder="Religion"></p>
+        <p><input type="text" name="school" placeholder="School"></p>
+        <p><input type="text" name="university" placeholder="University"></p>
+
+        <p>* - means that this fields are required</p>
         <br>
         <button type="submit">Register</button>
     </form>
+
+    <p id="login-block" hidden><br>Want to login? <a href="#">Click here</a></p>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </body>
 
 <script>
+    document.getElementById("register-block").onclick = function(){
+        document.getElementById("login-form").style.display = "none";
+        document.getElementById("register-block").style.display = "none";
+        document.getElementById("registration-form").style.display = "block";
+        document.getElementById("login-block").style.display = "block";
+    };
+
+    document.getElementById("login-block").onclick = function(){
+        document.getElementById("login-form").style.display = "block";
+        document.getElementById("register-block").style.display = "block";
+        document.getElementById("registration-form").style.display = "none";
+        document.getElementById("login-block").style.display = "none";
+    };
+
     $("#registration-form").submit(function (e) {
         $.ajax({
             url:"/register-user",
@@ -70,19 +88,5 @@
             }
         });
     });
-
-    function logout() {
-        $.ajax({
-            url:"/logout",
-            type:"GET",
-            data: null,
-            success: function success(data) {
-                alert("Logout completed");
-            },
-            error: function (xhr) {
-                alert("Logout failed");
-            }
-        });
-    }
 </script>
 </html>

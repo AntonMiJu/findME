@@ -2,6 +2,7 @@ package com.findme.models;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "POSTS")
@@ -9,7 +10,10 @@ public class Post {
     private Long id;
     private String message;
     private Date datePosted;
+    private String location;
+    private List<User> usersTagged;
     private User userPosted;
+    private User userPagePosted;
     //TODO
     //permissions
     //comments
@@ -32,10 +36,26 @@ public class Post {
         return datePosted;
     }
 
-    @JoinColumn(name = "USER_ID")
+    @Column(name = "LOCATION")
+    public String getLocation() {
+        return location;
+    }
+
+    @ManyToMany(mappedBy = "tagsInPosts")
+    public List<User> getUsersTagged() {
+        return usersTagged;
+    }
+
+    @JoinColumn(name = "USER_POSTED_ID")
     @OneToOne(cascade = CascadeType.ALL)
     public User getUserPosted() {
         return userPosted;
+    }
+
+    @JoinColumn(name = "USER_PAGE_ID")
+    @OneToOne(cascade = CascadeType.ALL)
+    public User getUserPagePosted() {
+        return userPagePosted;
     }
 
     public void setId(Long id) {
@@ -50,7 +70,19 @@ public class Post {
         this.datePosted = datePosted;
     }
 
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setUsersTagged(List<User> usersTagged) {
+        this.usersTagged = usersTagged;
+    }
+
     public void setUserPosted(User userPosted) {
         this.userPosted = userPosted;
+    }
+
+    public void setUserPagePosted(User userPagePosted) {
+        this.userPagePosted = userPagePosted;
     }
 }

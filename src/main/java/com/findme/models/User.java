@@ -27,6 +27,8 @@ public class User {
     private String university;
 //    private String[] interests;
 
+    private List<Post> tagsInPosts;
+
     private List<Message> messagesSent;
     private List<Message> messagesReceived;
 
@@ -108,6 +110,14 @@ public class User {
         return university;
     }
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "TAGS",
+            joinColumns = {@JoinColumn(name = "USER_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "POST_ID")})
+    public List<Post> getTagsInPosts() {
+        return tagsInPosts;
+    }
+
     @OneToMany(mappedBy = "userFrom")
     public List<Message> getMessagesSent() {
         return messagesSent;
@@ -176,6 +186,10 @@ public class User {
 
     public void setUniversity(String university) {
         this.university = university;
+    }
+
+    public void setTagsInPosts(List<Post> tagsInPosts) {
+        this.tagsInPosts = tagsInPosts;
     }
 
     public void setMessagesSent(List<Message> messagesSent) {

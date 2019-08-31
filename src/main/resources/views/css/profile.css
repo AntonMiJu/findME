@@ -1,0 +1,39 @@
+.left{
+    text-align: center;
+    position: absolute;
+    float: left;
+    width: 30%;
+    top: 2%;
+    left: 3%;
+    background: #f0f0f0;
+}
+
+.left button{
+    text-transform: uppercase;
+    outline: 0;
+    background: #4CAF50;
+    width: 300px;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.right{
+    position: absolute;
+    width: 57%;
+    top: 2%;
+    left: 36%;
+    padding: 2%;
+    background: #f0f0f0;
+}
+
+.photo{
+    text-align: center;
+    width: 200px;
+    height: 300px;
+    margin-top: 4%;
+    margin-left: 25%;
+    border-style: solid;
+}

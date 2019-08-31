@@ -1,0 +1,39 @@
+.center {
+    width: 50%;
+    left: 25%;
+    margin-top: 3%;
+    padding: 5% 0 5%;
+    text-align: center;
+    background: #f0f0f0;
+    position: relative;
+}
+
+.center input{
+    outline: 0;
+    width: 80%;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.center textarea{
+    outline: 0;
+    width: 80%;
+    margin: 0 0 15px;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.center button{
+    text-transform: uppercase;
+    outline: 0;
+    background: #4CAF50;
+    width: 80%;
+    border: 0;
+    padding: 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    cursor: pointer;
+}
