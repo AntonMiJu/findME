@@ -18,6 +18,8 @@ public class PostService {
     private PostDAO postDAO;
     private RelationshipService relationshipService;
 
+    private Long indexOfLastNews;
+
     @Autowired
     public PostService(PostDAO postDAO, RelationshipService relationshipService) {
         this.postDAO = postDAO;
@@ -28,6 +30,16 @@ public class PostService {
         if (postDAO.getByPage(pageId) == null)
             throw new NotFoundException("404: Posts not found");
         return postDAO.getByPage(pageId);
+    }
+
+    public List<Post> getFirst20News(Long userID) throws SystemException {
+        indexOfLastNews = Long.valueOf(0);
+        return postDAO.getFirst20News(userID);
+    }
+
+    public List<Post> getNext20News(Long userID, Long indexOfLastNews) throws SystemException {
+        indexOfLastNews += indexOfLastNews.longValue()+20;
+        return postDAO.getNext20News(userID, indexOfLastNews);
     }
 
     public List<Post> getByUserPostedId(Long pageId, Long userPostedId) throws NotFoundException{
