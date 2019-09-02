@@ -47,8 +47,7 @@ public class PostService {
     }
 
     public Post save(Post post) throws SystemException, ForbiddenException, BadRequestException {
-        if (!post.getUserPosted().getId().equals(post.getUserPagePosted().getId()) &&
-                !relationshipService.get(post.getUserPosted().getId(), post.getUserPagePosted().getId()).getStatus().equals(RelationshipStatus.FRIENDS))
+        if (relationshipService.get(post.getUserPosted().getId(), post.getUserPagePosted().getId()) == null || !relationshipService.get(post.getUserPosted().getId(), post.getUserPagePosted().getId()).getStatus().equals(RelationshipStatus.FRIENDS))
             throw new ForbiddenException("403: You can post on this page");
         if (post.getMessage().length() > 200 || post.getMessage().contains("http://") || post.getMessage().contains("https://"))
             throw new BadRequestException("400: Bad message format");
