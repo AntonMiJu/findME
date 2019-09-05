@@ -18,13 +18,11 @@ public class PostDAO extends GeneralDAO<Post> {
     private static final String getByUserPage = "SELECT * FROM POSTS WHERE USER_PAGE_ID = :userPageId ORDER BY DATE_POSTED DESC;";
     private static final String getByUserPostedId = "SELECT * FROM POSTS WHERE USER_PAGE_ID = :userPageId AND USER_POSTED_ID = :userPostedId ORDER BY DATE_POSTED DESC;";
     private static final String getByFriends = "SELECT * FROM POSTS WHERE USER_PAGE_ID = :userPageId  AND USER_POSTED_ID != :userPostedId ORDER BY DATE_POSTED DESC;";
-    private static final String getFirst20News = "SELECT * FROM POSTS P WHERE P.USER_POSTED_ID IN " +
-            "(SELECT USER_FROM_ID FROM RELATIONSHIPS R WHERE R.USER_TO_ID = :userId AND R.STATUS = 'FRIENDS') OR " +
-            "P.USER_POSTED_ID IN (SELECT USER_TO_ID FROM RELATIONSHIPS WHERE USER_FROM_ID = :userId AND STATUS = 'FRIENDS')" +
-            " ORDER BY DATE_POSTED DESC LIMIT 20;";
-    private static final String getNext20News = "SELECT * FROM POSTS P WHERE P.USER_POSTED_ID IN " +
-            "(SELECT USER_FROM_ID FROM RELATIONSHIPS R WHERE R.USER_TO_ID = :userId AND R.STATUS = 'FRIENDS') OR " +
-            "P.USER_POSTED_ID IN (SELECT USER_TO_ID FROM RELATIONSHIPS WHERE USER_FROM_ID = :userId AND STATUS = 'FRIENDS')" +
+    private static final String getFirst20News = "SELECT P.* FROM POSTS P INNER JOIN RELATIONSHIPS R ON " +
+            "((P.USER_POSTED_ID = R.USER_FROM_ID AND R.USER_TO_ID = :userId AND STATUS = 'FRIENDS') OR (P.USER_POSTED_ID = R.USER_TO_ID AND R.USER_FROM_ID = :userId AND STATUS = 'FRIENDS')) " +
+            "ORDER BY DATE_POSTED DESC LIMIT 20;";
+    private static final String getNext20News = "SELECT P.* FROM POSTS P INNER JOIN RELATIONSHIPS R ON " +
+            "((P.USER_POSTED_ID = R.USER_FROM_ID AND R.USER_TO_ID = :userId AND STATUS = 'FRIENDS') OR (P.USER_POSTED_ID = R.USER_TO_ID AND R.USER_FROM_ID = :userId AND STATUS = 'FRIENDS')) " +
             "ORDER BY DATE_POSTED DESC OFFSET :lastIndex ROWS FETCH NEXT 20 ROWS ONLY;";
 
     private RelationshipDAO relationshipDAO;
