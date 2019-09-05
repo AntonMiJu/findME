@@ -102,13 +102,7 @@ public class PostController {
 
     @RequestMapping(path = "/feed", method = RequestMethod.GET)
     public String getNews(HttpSession session, Model model){
-        List<Post> posts;
-        try {
-            posts = postService.getFirst20News(((User)session.getAttribute("user")).getId());
-            model.addAttribute(posts);
-        } catch (SystemException e){
-            return "systemException";
-        }
+        model.addAttribute(postService.getFirst20News(((User)session.getAttribute("user")).getId()));
         return "feed";
     }
 }

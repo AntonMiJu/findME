@@ -13,8 +13,8 @@ import javax.persistence.PersistenceException;
 @Repository
 @Transactional
 public class UserDAO extends GeneralDAO<User> {
-    private static final String findUserByPhoneOrEmail = "SELECT * FROM USERS WHERE PHONE = ? OR EMAIL = ?;";
-    private static final String findUserByEmailAndPassword = "SELECT * FROM USERS WHERE EMAIL = ? AND PASSWORD = ?;";
+    private static final String findUserByPhoneOrEmail = "SELECT * FROM USERS WHERE PHONE = :phone OR EMAIL = :email;";
+    private static final String findUserByEmailAndPassword = "SELECT * FROM USERS WHERE EMAIL = :email AND PASSWORD = :pass;";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -22,8 +22,8 @@ public class UserDAO extends GeneralDAO<User> {
     public User findUserByPhoneOrEmail(String phone, String email) throws SystemException {
         try {
             return (User) entityManager.createNativeQuery(findUserByPhoneOrEmail, User.class)
-                    .setParameter(1, phone)
-                    .setParameter(2, email)
+                    .setParameter("phone", phone)
+                    .setParameter("email", email)
                     .getSingleResult();
         } catch (PersistenceException e) {
             return null;
@@ -35,8 +35,8 @@ public class UserDAO extends GeneralDAO<User> {
     public User findUserByEmailAndPassword(String email, String password) throws SystemException{
         try {
             return (User) entityManager.createNativeQuery(findUserByEmailAndPassword, User.class)
-                    .setParameter(1, email)
-                    .setParameter(2, password)
+                    .setParameter("email", email)
+                    .setParameter("pass", password)
                     .getSingleResult();
         } catch (PersistenceException e){
             return null;

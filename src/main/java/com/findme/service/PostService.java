@@ -32,12 +32,12 @@ public class PostService {
         return postDAO.getByPage(pageId);
     }
 
-    public List<Post> getFirst20News(Long userID) throws SystemException {
+    public List<Post> getFirst20News(Long userID) {
         indexOfLastNews = Long.valueOf(0);
         return postDAO.getFirst20News(userID);
     }
 
-    public List<Post> getNext20News(Long userID, Long indexOfLastNews) throws SystemException {
+    public List<Post> getNext20News(Long userID, Long indexOfLastNews) {
         indexOfLastNews += indexOfLastNews.longValue()+20;
         return postDAO.getNext20News(userID, indexOfLastNews);
     }

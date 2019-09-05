@@ -15,11 +15,17 @@ import java.util.*;
 @Repository
 @Transactional
 public class PostDAO extends GeneralDAO<Post> {
-    private static final String getByUserPage = "SELECT * FROM POSTS WHERE USER_PAGE_ID = ? ORDER BY DATE_POSTED DESC;";
-    private static final String getByUserPostedId = "SELECT * FROM POSTS WHERE USER_PAGE_ID = ? AND USER_POSTED_ID = ? ORDER BY DATE_POSTED DESC;";
-    private static final String getByFriends = "SELECT * FROM POSTS WHERE USER_PAGE_ID = ? AND USER_POSTED_ID != ? ORDER BY DATE_POSTED DESC;";
-    private static final String getFirst20News = "SELECT * FROM POSTS WHERE USER_POSTED_ID = ? ORDER BY DATE_POSTED DESC LIMIT 20;";
-    private static final String getNext20News = "SELECT * FROM POSTS WHERE USER_POSTED_ID = ? ORDER BY DATE_POSTED DESC OFFSET ? ROWS FETCH NEXT 20 ROWS ONLY;";
+    private static final String getByUserPage = "SELECT * FROM POSTS WHERE USER_PAGE_ID = :userPageId ORDER BY DATE_POSTED DESC;";
+    private static final String getByUserPostedId = "SELECT * FROM POSTS WHERE USER_PAGE_ID = :userPageId AND USER_POSTED_ID = :userPostedId ORDER BY DATE_POSTED DESC;";
+    private static final String getByFriends = "SELECT * FROM POSTS WHERE USER_PAGE_ID = :userPageId  AND USER_POSTED_ID != :userPostedId ORDER BY DATE_POSTED DESC;";
+    private static final String getFirst20News = "SELECT * FROM POSTS P WHERE P.USER_POSTED_ID IN " +
+            "(SELECT USER_FROM_ID FROM RELATIONSHIPS R WHERE R.USER_TO_ID = :userId AND R.STATUS = 'FRIENDS') OR " +
+            "P.USER_POSTED_ID IN (SELECT USER_TO_ID FROM RELATIONSHIPS WHERE USER_FROM_ID = :userId AND STATUS = 'FRIENDS')" +
+            " ORDER BY DATE_POSTED DESC LIMIT 20;";
+    private static final String getNext20News = "SELECT * FROM POSTS P WHERE P.USER_POSTED_ID IN " +
+            "(SELECT USER_FROM_ID FROM RELATIONSHIPS R WHERE R.USER_TO_ID = :userId AND R.STATUS = 'FRIENDS') OR " +
+            "P.USER_POSTED_ID IN (SELECT USER_TO_ID FROM RELATIONSHIPS WHERE USER_FROM_ID = :userId AND STATUS = 'FRIENDS')" +
+            "ORDER BY DATE_POSTED DESC OFFSET :lastIndex ROWS FETCH NEXT 20 ROWS ONLY;";
 
     private RelationshipDAO relationshipDAO;
 
@@ -33,47 +39,35 @@ public class PostDAO extends GeneralDAO<Post> {
 
     public List<Post> getByPage(Long pageId) {
         return entityManager.createNativeQuery(getByUserPage, Post.class)
-                .setParameter(1, pageId)
+                .setParameter("userPageId", pageId)
                 .getResultList();
     }
 
     public List<Post> getByUserPostedId(Long pageId, Long userPostedId) {
         return entityManager.createNativeQuery(getByUserPostedId, Post.class)
-                .setParameter(1, pageId)
-                .setParameter(2, userPostedId)
+                .setParameter("userPageId", pageId)
+                .setParameter("userPostedId", userPostedId)
                 .getResultList();
     }
 
     public List<Post> getByFriends(Long pageId) {
         return entityManager.createNativeQuery(getByFriends, Post.class)
-                .setParameter(1, pageId)
-                .setParameter(2, pageId)
+                .setParameter("userPageId", pageId)
+                .setParameter("userPostedId", pageId)
                 .getResultList();
     }
 
-    public List<Post> getFirst20News(Long userID) throws SystemException {
-        Long friendID;
-        List<Post> posts = new ArrayList<Post>();
-        for (Relationship rel : relationshipDAO.getFriendsList(userID)) {
-            friendID = rel.getUserFromId().getId().equals(userID) ? rel.getUserFromId().getId() : rel.getUserToId().getId();
-            posts.addAll(entityManager.createNativeQuery(getFirst20News, Post.class)
-                    .setParameter(1, friendID)
-                    .getResultList());
-        }
-        return posts;
+    public List<Post> getFirst20News(Long userID) {
+        return entityManager.createNativeQuery(getFirst20News, Post.class)
+                .setParameter("userID", userID)
+                .getResultList();
     }
 
-    public List<Post> getNext20News(Long userID, Long indexOfLastNews) throws SystemException {
-        Long friendID;
-        List<Post> posts = new ArrayList<Post>();
-        for (Relationship rel : relationshipDAO.getFriendsList(userID)) {
-            friendID = rel.getUserFromId().getId().equals(userID) ? rel.getUserFromId().getId() : rel.getUserToId().getId();
-            posts.addAll(entityManager.createNativeQuery(getNext20News, Post.class)
-                    .setParameter(1, friendID)
-                    .setParameter(2, indexOfLastNews)
-                    .getResultList());
-        }
-        return posts;
+    public List<Post> getNext20News(Long userID, Long indexOfLastNews) {
+        return entityManager.createNativeQuery(getNext20News, Post.class)
+                .setParameter("userId", userID)
+                .setParameter("lastIndex", indexOfLastNews)
+                .getResultList();
     }
 
     @Override
