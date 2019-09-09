@@ -80,10 +80,10 @@
                 email : document.getElementById("email").value,
                 password : document.getElementById("password").value
             },
-            success: function success(data) {
-                alert("Login completed");
+            success: function success(xhr) {
+                window.location.href = ("/user/"+xhr.toString());
             },
-            error: function (xhr) {
+            error: function error(xhr) {
                 alert("Login failed");
             }
         });

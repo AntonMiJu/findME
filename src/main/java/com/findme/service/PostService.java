@@ -7,6 +7,7 @@ import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Post;
 import com.findme.models.RelationshipStatus;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class PostService {
     private PostDAO postDAO;
     private RelationshipService relationshipService;
+    private static final Logger log = Logger.getLogger(PostService.class);
 
     private Long indexOfLastNews;
 
@@ -26,52 +28,72 @@ public class PostService {
         this.relationshipService = relationshipService;
     }
 
-    public List<Post> getByPage(Long pageId) throws NotFoundException{
-        if (postDAO.getByPage(pageId) == null)
+    public List<Post> getByPage(Long pageId) throws NotFoundException {
+        log.info("PostService getByPage method");
+        if (postDAO.getByPage(pageId) == null) {
+            log.error("Posts not found for " + pageId);
             throw new NotFoundException("404: Posts not found");
+        }
         return postDAO.getByPage(pageId);
     }
 
     public List<Post> getFirst20News(Long userID) {
+        log.info("PostService getFirst20News method");
         indexOfLastNews = Long.valueOf(0);
         return postDAO.getFirst20News(userID);
     }
 
     public List<Post> getNext20News(Long userID, Long indexOfLastNews) {
-        indexOfLastNews += indexOfLastNews.longValue()+20;
+        log.info("PostService getNext20News method");
+        indexOfLastNews += indexOfLastNews.longValue() + 20;
         return postDAO.getNext20News(userID, indexOfLastNews);
     }
 
-    public List<Post> getByUserPostedId(Long pageId, Long userPostedId) throws NotFoundException{
-        if (postDAO.getByPage(pageId) == null)
+    public List<Post> getByUserPostedId(Long pageId, Long userPostedId) throws NotFoundException {
+        log.info("PostService getByUserPostedId method");
+        if (postDAO.getByPage(pageId) == null) {
+            log.error("Posts of user " + userPostedId + " not found for " + pageId);
             throw new NotFoundException("404: Posts not found");
+        }
         return postDAO.getByUserPostedId(pageId, userPostedId);
     }
 
-    public List<Post> getByFriends(Long pageId) throws NotFoundException{
-        if (postDAO.getByPage(pageId) == null)
+    public List<Post> getByFriends(Long pageId) throws NotFoundException {
+        log.info("PostService getByFriends method");
+        if (postDAO.getByPage(pageId) == null){
+            log.error("Posts of friends not found for " + pageId);
             throw new NotFoundException("404: Posts not found");
+        }
         return postDAO.getByFriends(pageId);
     }
 
     public Post get(Long id) throws NotFoundException, SystemException {
-        return postDAO.get(id, Post.class);
+        log.info("PostService get method");
+        return postDAO.get(id);
     }
 
     public Post save(Post post) throws SystemException, ForbiddenException, BadRequestException {
-        if (relationshipService.get(post.getUserPosted().getId(), post.getUserPagePosted().getId()) == null || !relationshipService.get(post.getUserPosted().getId(), post.getUserPagePosted().getId()).getStatus().equals(RelationshipStatus.FRIENDS))
+        log.info("PostService save method");
+        if (relationshipService.get(post.getUserPosted().getId(), post.getUserPagePosted().getId()) == null ||
+                !relationshipService.get(post.getUserPosted().getId(), post.getUserPagePosted().getId()).getStatus().equals(RelationshipStatus.FRIENDS)){
+            log.error("You can post on this page");
             throw new ForbiddenException("403: You can post on this page");
-        if (post.getMessage().length() > 200 || post.getMessage().contains("http://") || post.getMessage().contains("https://"))
+        }
+        if (post.getMessage().length() > 200 || post.getMessage().contains("http://") || post.getMessage().contains("https://")){
+            log.error("Bad message format");
             throw new BadRequestException("400: Bad message format");
+        }
         post.setDatePosted(new Date());
         return postDAO.save(post);
     }
 
     public Post update(Post post) throws SystemException {
+        log.info("PostService update method");
         return postDAO.update(post);
     }
 
     public void delete(Long id) throws SystemException {
-        postDAO.delete(id, Post.class);
+        log.info("PostService delete method");
+        postDAO.delete(id);
     }
 }

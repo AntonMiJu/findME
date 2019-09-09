@@ -1,13 +1,13 @@
 package com.findme.controller;
 
 import com.findme.exceptions.BadRequestException;
-import com.findme.exceptions.ForbiddenException;
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Relationship;
 import com.findme.models.User;
 import com.findme.service.RelationshipService;
 import com.findme.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,21 +19,23 @@ import java.util.Date;
 
 @Controller
 public class UserController {
+    private static final Logger log = Logger.getLogger(UserController.class);
     private UserService userService;
     private RelationshipService relationshipService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RelationshipService relationshipService) {
         this.userService = userService;
+        this.relationshipService = relationshipService;
     }
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     @Interceptors(ValidateInterceptor.class)
     public String profile(HttpSession session, Model model, @PathVariable Long userId) {
+        log.info("UserController profile method");
         User user = null;
         Relationship relationship = null;
         try {
-            validateLogin(session);
             user = userService.get(userId);
             relationship = relationshipService.get(((User)session.getAttribute("user")).getId(), userId);
         } catch (NumberFormatException e) {
@@ -42,8 +44,6 @@ public class UserController {
             return "systemException";
         } catch (NotFoundException e) {
             return "notFoundException";
-        } catch (ForbiddenException e){
-            return "forbiddenException";
         }
         model.addAttribute("relationshipStatus", relationship.getStatus().toString());
         model.addAttribute("user", user);
@@ -52,6 +52,7 @@ public class UserController {
 
     @RequestMapping(path = "/register-user", method = RequestMethod.POST)
     public String registerUser(@ModelAttribute User user) {
+        log.info("UserController registerUser method");
         try {
             userService.save(user);
         } catch (SystemException e){
@@ -65,6 +66,7 @@ public class UserController {
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(HttpSession session, @RequestParam(name = "email") String email
             , @RequestParam(name = "password") String password, Model model){
+        log.info("UserController login method");
         User user = null;
         try {
             user = userService.login(email,password);
@@ -81,6 +83,7 @@ public class UserController {
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     @Interceptors(ValidateInterceptor.class)
     public String logout(HttpSession session){
+        log.info("UserController logout method");
         try {
             User user = (User) session.getAttribute("user");
             user.setDateLastActive(new Date());
@@ -90,10 +93,5 @@ public class UserController {
             return "systemException";
         }
         return "index";
-    }
-
-    private void validateLogin(HttpSession session) throws ForbiddenException{
-        if (session.getAttribute("user") == null)
-            throw new ForbiddenException("You must be logined");
     }
 }

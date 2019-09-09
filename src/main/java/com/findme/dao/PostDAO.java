@@ -4,6 +4,7 @@ import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Post;
 import com.findme.models.Relationship;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,23 +26,24 @@ public class PostDAO extends GeneralDAO<Post> {
             "((P.USER_POSTED_ID = R.USER_FROM_ID AND R.USER_TO_ID = :userId AND STATUS = 'FRIENDS') OR (P.USER_POSTED_ID = R.USER_TO_ID AND R.USER_FROM_ID = :userId AND STATUS = 'FRIENDS')) " +
             "ORDER BY DATE_POSTED DESC OFFSET :lastIndex ROWS FETCH NEXT 20 ROWS ONLY;";
 
-    private RelationshipDAO relationshipDAO;
+    private static final Logger log = Logger.getLogger(PostDAO.class);
 
-    @Autowired
-    public PostDAO(RelationshipDAO relationshipDAO) {
-        this.relationshipDAO = relationshipDAO;
+    public PostDAO() {
+        settClass(Post.class);
     }
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public List<Post> getByPage(Long pageId) {
+        log.info("PostDAO getByPage method. Getting posts by page " + pageId);
         return entityManager.createNativeQuery(getByUserPage, Post.class)
                 .setParameter("userPageId", pageId)
                 .getResultList();
     }
 
     public List<Post> getByUserPostedId(Long pageId, Long userPostedId) {
+        log.info("PostDAO getByUserPostedId method. Getting posts by page " + pageId + " and user posted id " + userPostedId);
         return entityManager.createNativeQuery(getByUserPostedId, Post.class)
                 .setParameter("userPageId", pageId)
                 .setParameter("userPostedId", userPostedId)
@@ -49,6 +51,7 @@ public class PostDAO extends GeneralDAO<Post> {
     }
 
     public List<Post> getByFriends(Long pageId) {
+        log.info("PostDAO getByFriends method. Getting posts by friends of user " + pageId);
         return entityManager.createNativeQuery(getByFriends, Post.class)
                 .setParameter("userPageId", pageId)
                 .setParameter("userPostedId", pageId)
@@ -56,12 +59,14 @@ public class PostDAO extends GeneralDAO<Post> {
     }
 
     public List<Post> getFirst20News(Long userID) {
+        log.info("PostDAO getFirst20News method. Getting news for " + userID);
         return entityManager.createNativeQuery(getFirst20News, Post.class)
                 .setParameter("userID", userID)
                 .getResultList();
     }
 
     public List<Post> getNext20News(Long userID, Long indexOfLastNews) {
+        log.info("PostDAO getNext20News method. Getting news for " + userID);
         return entityManager.createNativeQuery(getNext20News, Post.class)
                 .setParameter("userId", userID)
                 .setParameter("lastIndex", indexOfLastNews)
@@ -69,8 +74,8 @@ public class PostDAO extends GeneralDAO<Post> {
     }
 
     @Override
-    public Post get(Long id, Class<Post> postClass) throws NotFoundException, SystemException {
-        return super.get(id, postClass);
+    public Post get(Long id) throws NotFoundException, SystemException {
+        return super.get(id);
     }
 
     @Override
@@ -84,7 +89,7 @@ public class PostDAO extends GeneralDAO<Post> {
     }
 
     @Override
-    public void delete(Long id, Class<Post> postClass) throws SystemException {
-        super.delete(id, postClass);
+    public void delete(Long id) throws SystemException {
+        super.delete(id);
     }
 }
