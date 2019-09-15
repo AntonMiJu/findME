@@ -43,7 +43,7 @@ public class PostService {
         return postDAO.getFirst20News(userID);
     }
 
-    public List<Post> getNext20News(Long userID, Long indexOfLastNews) {
+    public List<Post> getNext20News(Long userID) {
         log.info("PostService getNext20News method");
         indexOfLastNews += indexOfLastNews.longValue() + 20;
         return postDAO.getNext20News(userID, indexOfLastNews);

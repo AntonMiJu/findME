@@ -65,7 +65,7 @@ public class PostController {
             return "notFoundException";
         }
         model.addAttribute("posts", posts);
-        return "";
+        return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/by_friends", method = RequestMethod.GET)
@@ -78,7 +78,7 @@ public class PostController {
             return "notFoundException";
         }
         model.addAttribute("posts", posts);
-        return "";
+        return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/owner_posts", method = RequestMethod.GET)
@@ -91,7 +91,7 @@ public class PostController {
             return "notFoundException";
         }
         model.addAttribute("posts", posts);
-        return "";
+        return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/by_user_id", method = RequestMethod.GET)
@@ -104,13 +104,20 @@ public class PostController {
             return "notFoundException";
         }
         model.addAttribute("posts", posts);
-        return "";
+        return "posts";
     }
 
     @RequestMapping(path = "/feed", method = RequestMethod.GET)
     public String getNews(HttpSession session, Model model){
         log.info("PostController getNews method.");
         model.addAttribute(postService.getFirst20News(((User)session.getAttribute("user")).getId()));
+        return "feed";
+    }
+
+    @RequestMapping(path = "/next20feed", method = RequestMethod.GET)
+    public String getNext20News(HttpSession session, Model model){
+        log.info("PostController getNext20News method.");
+        model.addAttribute(postService.getNext20News(((User)session.getAttribute("user")).getId()));
         return "feed";
     }
 }
