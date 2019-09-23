@@ -65,7 +65,7 @@ public class PostDAO extends GeneralDAO<Post> {
                 .getResultList();
     }
 
-    public List<Post> getNext20News(Long userID, Long indexOfLastNews) {
+    public List<Post> getPostsBatch(Long userID, Long indexOfLastNews) {
         log.info("PostDAO getNext20News method. Getting news for " + userID);
         return entityManager.createNativeQuery(getNext20News, Post.class)
                 .setParameter("userId", userID)

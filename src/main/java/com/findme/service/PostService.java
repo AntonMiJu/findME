@@ -20,8 +20,6 @@ public class PostService {
     private RelationshipService relationshipService;
     private static final Logger log = Logger.getLogger(PostService.class);
 
-    private Long indexOfLastNews;
-
     @Autowired
     public PostService(PostDAO postDAO, RelationshipService relationshipService) {
         this.postDAO = postDAO;
@@ -39,14 +37,13 @@ public class PostService {
 
     public List<Post> getFirst20News(Long userID) {
         log.info("PostService getFirst20News method");
-        indexOfLastNews = Long.valueOf(0);
         return postDAO.getFirst20News(userID);
     }
 
-    public List<Post> getNext20News(Long userID) {
+    public List<Post> getPostsBatch(Long userID, Long indexOfLastNews) {
         log.info("PostService getNext20News method");
         indexOfLastNews += indexOfLastNews.longValue() + 20;
-        return postDAO.getNext20News(userID, indexOfLastNews);
+        return postDAO.getPostsBatch(userID, indexOfLastNews);
     }
 
     public List<Post> getByUserPostedId(Long pageId, Long userPostedId) throws NotFoundException {

@@ -95,7 +95,7 @@ public class PostController {
     }
 
     @RequestMapping(path = "/post/{userId}/by_user_id", method = RequestMethod.GET)
-    public String getPosts(HttpSession session, Model model, @PathVariable Long userId, @RequestParam(name = "password") Long userPostedId){
+    public String getPosts(HttpSession session, Model model, @PathVariable Long userId, @RequestParam(name = "userPostedId") Long userPostedId){
         log.info("PostController getPosts method.");
         List<Post> posts;
         try {
@@ -115,9 +115,9 @@ public class PostController {
     }
 
     @RequestMapping(path = "/next20feed", method = RequestMethod.GET)
-    public String getNext20News(HttpSession session, Model model){
+    public String getPostsBatch(HttpSession session, Model model, Long indexOfLastNews){
         log.info("PostController getNext20News method.");
-        model.addAttribute(postService.getNext20News(((User)session.getAttribute("user")).getId()));
+        model.addAttribute(postService.getPostsBatch(((User)session.getAttribute("user")).getId(),indexOfLastNews));
         return "feed";
     }
 }
