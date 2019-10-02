@@ -75,6 +75,8 @@ public class PostDAO extends GeneralDAO<Post> {
 
     @Override
     public Post get(Long id) throws NotFoundException, SystemException {
+        if (super.get(id)==null)
+            throw new NotFoundException("Not found");
         return super.get(id);
     }
 

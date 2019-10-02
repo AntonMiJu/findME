@@ -32,92 +32,66 @@ public class PostController {
     }
 
     @RequestMapping(path = "/user/{userId}/create_post", method = RequestMethod.POST)
-    public String createPost(HttpSession session, Model model, @PathVariable Long userId) {
+    public String createPost(HttpSession session, Model model, @PathVariable Long userId) throws Exception {
         log.info("PostController createPost method.");
         User user = null;
-        try {
-            Post post = new Post();
-            //TODO set message, location, tagged
-            post.setUserPosted((User) session.getAttribute("user"));
-            user = userService.get(userId);
-            post.setUserPagePosted(user);
-            postService.save(post);
-        } catch (SystemException e) {
-            return "systemException";
-        } catch (NotFoundException e) {
-            return "notFoundException";
-        } catch (ForbiddenException e) {
-            return "forbiddenException";
-        } catch (BadRequestException e) {
-            return "badRequestException";
-        }
+        Post post = new Post();
+        //TODO set message, location, tagged
+        post.setUserPosted((User) session.getAttribute("user"));
+        user = userService.get(userId);
+        post.setUserPagePosted(user);
+        postService.save(post);
         model.addAttribute("user", user);
         return "profile";
     }
 
     @RequestMapping(path = "/post/{userId}", method = RequestMethod.GET)
-    public String getPosts(HttpSession session, Model model, @PathVariable Long userId){
+    public String getPosts(HttpSession session, Model model, @PathVariable Long userId) throws NotFoundException {
         log.info("PostController getPosts method.");
         List<Post> posts;
-        try {
-            posts = postService.getByPage(userId);
-        } catch (NotFoundException e){
-            return "notFoundException";
-        }
+        posts = postService.getByPage(userId);
         model.addAttribute("posts", posts);
         return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/by_friends", method = RequestMethod.GET)
-    public String getPostsByFriends(HttpSession session, Model model, @PathVariable Long userId){
+    public String getPostsByFriends(HttpSession session, Model model, @PathVariable Long userId) throws NotFoundException {
         log.info("PostController getPostsByFriends method.");
         List<Post> posts;
-        try {
-            posts = postService.getByFriends(userId);
-        } catch (NotFoundException e){
-            return "notFoundException";
-        }
+        posts = postService.getByFriends(userId);
         model.addAttribute("posts", posts);
         return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/owner_posts", method = RequestMethod.GET)
-    public String getPostsOnlyOwnerOfPage(HttpSession session, Model model, @PathVariable Long userId){
+    public String getPostsOnlyOwnerOfPage(HttpSession session, Model model, @PathVariable Long userId) throws NotFoundException {
         log.info("PostController getPostsOnlyOwnerOfPage method.");
         List<Post> posts;
-        try {
-            posts = postService.getByUserPostedId(userId, userId);
-        } catch (NotFoundException e){
-            return "notFoundException";
-        }
+        posts = postService.getByUserPostedId(userId, userId);
         model.addAttribute("posts", posts);
         return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/by_user_id", method = RequestMethod.GET)
-    public String getPosts(HttpSession session, Model model, @PathVariable Long userId, @RequestParam(name = "userPostedId") Long userPostedId){
+    public String getPosts(HttpSession session, Model model, @PathVariable Long userId, @RequestParam(name = "userPostedId") Long userPostedId) throws NotFoundException {
         log.info("PostController getPosts method.");
         List<Post> posts;
-        try {
-            posts = postService.getByUserPostedId(userId, userPostedId);
-        } catch (NotFoundException e){
-            return "notFoundException";
-        }
+        posts = postService.getByUserPostedId(userId, userPostedId);
         model.addAttribute("posts", posts);
         return "posts";
     }
 
     @RequestMapping(path = "/feed", method = RequestMethod.GET)
-    public String getNews(HttpSession session, Model model){
+    public String getNews(HttpSession session, Model model) {
         log.info("PostController getNews method.");
-        model.addAttribute(postService.getFirst20News(((User)session.getAttribute("user")).getId()));
+        model.addAttribute(postService.getFirst20News(((User) session.getAttribute("user")).getId()));
         return "feed";
     }
 
     @RequestMapping(path = "/next20feed", method = RequestMethod.GET)
-    public String getPostsBatch(HttpSession session, Model model, Long indexOfLastNews){
+    public String getPostsBatch(HttpSession session, Model model, Long indexOfLastNews) {
         log.info("PostController getNext20News method.");
-        model.addAttribute(postService.getPostsBatch(((User)session.getAttribute("user")).getId(),indexOfLastNews));
+        model.addAttribute(postService.getPostsBatch(((User) session.getAttribute("user")).getId(), indexOfLastNews));
         return "feed";
     }
 }

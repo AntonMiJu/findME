@@ -32,72 +32,40 @@ public class RelationshipController {
     }
 
     @RequestMapping(path = "/user/{userId}/send_request", method = RequestMethod.POST)
-    public String sendRequest(HttpSession session, Model model, @PathVariable Long userId) {
+    public String sendRequest(HttpSession session, Model model, @PathVariable Long userId) throws Exception {
         log.info("RelationshipController sendRequest method");
-        try {
-            relationshipService.save(((User) session.getAttribute("user")).getId(), userId);
-            model.addAttribute("user", userService.get(userId));
-        } catch (SystemException e) {
-            return "systemException";
-        } catch (NotFoundException e) {
-            return "notFoundException";
-        } catch (BadRequestException e){
-            return "badRequestException";
-        }
+        relationshipService.save(((User) session.getAttribute("user")).getId(), userId);
+        model.addAttribute("user", userService.get(userId));
         return "profile";
     }
 
     @RequestMapping(path = "/user/{userId}/update_request", method = RequestMethod.PUT)
-    public String updateRequest(HttpSession session, Model model, @PathVariable Long userId, @RequestParam(name = "status") String status) {
+    public String updateRequest(HttpSession session, Model model, @PathVariable Long userId, @RequestParam(name = "status") String status) throws Exception {
         log.info("RelationshipController updateRequest method");
-        try {
-            relationshipService.update(((User) session.getAttribute("user")).getId(), userId, status);
-            model.addAttribute("user", userService.get(userId));
-        } catch (SystemException e) {
-            return "systemException";
-        } catch (NotFoundException e) {
-            return "notFoundException";
-        } catch (BadRequestException e){
-            return "badRequestException";
-        }
+        relationshipService.update(((User) session.getAttribute("user")).getId(), userId, status);
+        model.addAttribute("user", userService.get(userId));
         return "profile";
     }
 
     @RequestMapping(path = "/user/{userId}/delete", method = RequestMethod.PUT)
-    public String deleteFromFriends(HttpSession session, Model model, @PathVariable Long userId) {
+    public String deleteFromFriends(HttpSession session, Model model, @PathVariable Long userId) throws Exception {
         log.info("RelationshipController deleteFromFriends method");
-        try {
-            relationshipService.delete(((User) session.getAttribute("user")).getId(), userId);
-            model.addAttribute("user", userService.get(userId));
-        } catch (SystemException e) {
-            return "systemException";
-        } catch (NotFoundException e) {
-            return "notFoundException";
-        } catch (BadRequestException e){
-            return "badRequestException";
-        }
+        relationshipService.delete(((User) session.getAttribute("user")).getId(), userId);
+        model.addAttribute("user", userService.get(userId));
         return "profile";
     }
 
     @RequestMapping(path = "/income_requests", method = RequestMethod.GET)
-    public String getIncomeRequests(HttpSession session){
+    public String getIncomeRequests(HttpSession session) throws SystemException {
         log.info("RelationshipController getIncomeRequests method");
-        try {
-            relationshipService.getIncomeRequests(((User)session.getAttribute("user")).getId());
-        } catch (SystemException e){
-            return "systemException";
-        }
+        relationshipService.getIncomeRequests(((User) session.getAttribute("user")).getId());
         return "profile";
     }
 
     @RequestMapping(path = "/outcome_requests", method = RequestMethod.GET)
-    public String getOutcomeRequests(HttpSession session){
+    public String getOutcomeRequests(HttpSession session) throws SystemException {
         log.info("RelationshipController getOutcomeRequests method");
-        try {
-            relationshipService.getOutcomeRequests(((User)session.getAttribute("user")).getId());
-        } catch (SystemException e){
-            return "systemException";
-        }
+        relationshipService.getOutcomeRequests(((User) session.getAttribute("user")).getId());
         return "profile";
     }
 }

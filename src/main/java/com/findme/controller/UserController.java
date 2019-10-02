@@ -31,50 +31,38 @@ public class UserController {
 
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     @Interceptors(ValidateInterceptor.class)
-    public String profile(HttpSession session, Model model, @PathVariable Long userId) {
+    public String profile(HttpSession session, Model model, @PathVariable Long userId) throws Exception {
         log.info("UserController profile method");
+        User loginedUser = (User) session.getAttribute("user");
         User user = null;
         Relationship relationship = null;
-        try {
-            user = userService.get(userId);
-            relationship = relationshipService.get(((User)session.getAttribute("user")).getId(), userId);
-        } catch (NumberFormatException e) {
-            return "badRequestException";
-        } catch (SystemException e) {
-            return "systemException";
-        } catch (NotFoundException e) {
-            return "notFoundException";
-        }
-        model.addAttribute("relationshipStatus", relationship.getStatus().toString());
+
+        user = userService.get(userId);
+//        if (!loginedUser.getId().equals(userId)){
+//            relationship = relationshipService.get(loginedUser.getId(), userId);
+//            model.addAttribute("relationshipStatus", relationship.getStatus().toString());
+//        }
+
         model.addAttribute("user", user);
         return "profile";
     }
 
     @RequestMapping(path = "/register-user", method = RequestMethod.POST)
-    public String registerUser(@ModelAttribute User user) {
+    public String registerUser(@ModelAttribute User user) throws Exception {
         log.info("UserController registerUser method");
-        try {
-            userService.save(user);
-        } catch (SystemException e){
-            return "systemException";
-        } catch(BadRequestException e){
-            return "badRequestException";
-        }
+        userService.save(user);
+
         return "profile";
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     public String login(HttpSession session, @RequestParam(name = "email") String email
-            , @RequestParam(name = "password") String password, Model model){
+            , @RequestParam(name = "password") String password, Model model) throws Exception {
         log.info("UserController login method");
         User user = null;
-        try {
-            user = userService.login(email,password);
-        } catch (NotFoundException e){
-            return "forbiddenException";
-        } catch (SystemException e){
-            return "systemException";
-        }
+
+        user = userService.login(email, password);
+
         session.setAttribute("user", user);
         model.addAttribute("user", user);
         return "profile";
@@ -82,16 +70,12 @@ public class UserController {
 
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
     @Interceptors(ValidateInterceptor.class)
-    public String logout(HttpSession session){
+    public String logout(HttpSession session) throws SystemException {
         log.info("UserController logout method");
-        try {
-            User user = (User) session.getAttribute("user");
-            user.setDateLastActive(new Date());
-            userService.update(user);
-            session.setAttribute("user", null);
-        } catch (SystemException e){
-            return "systemException";
-        }
+        User user = (User) session.getAttribute("user");
+        user.setDateLastActive(new Date());
+        userService.update(user);
+        session.setAttribute("user", null);
         return "index";
     }
 }
