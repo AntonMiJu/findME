@@ -48,6 +48,10 @@ public class RelationshipService {
 
     public Relationship save(Long userFromId, Long userToId) throws SystemException, BadRequestException, NotFoundException {
         log.info("RelationshipService save method");
+        if (userFromId.equals(userToId) || relationshipDAO.get(userFromId, userToId) != null){
+            log.error("Saving is failed");
+            throw new BadRequestException("400: Bad save logic.");
+        }
         validateSave(userFromId, userToId);
 
         Relationship relationship = new Relationship();
@@ -66,30 +70,43 @@ public class RelationshipService {
         }
 
         Relationship relationship = relationshipDAO.get(userFromId, userToId);
-        relationship.setStatus(RelationshipStatus.valueOf(status));
-        if (status.equals(RelationshipStatus.FRIENDS.toString()))
-            relationship.setStartOfRelationships(new Date());
 
+        validateStatus(relationship.getStatus(), RelationshipStatus.valueOf(status));
+
+        if (status.equals(RelationshipStatus.REQUESTED.toString())){
+            validateSave(userFromId, userToId);
+        }
+
+        if (status.equals(RelationshipStatus.FRIENDS.toString())){
+            validateSave(userFromId, userToId);
+            relationship.setStartOfRelationships(new Date());
+        }
+
+        if (status.equals(RelationshipStatus.DELETED.toString())){
+            validateDelete(userFromId, userToId);
+            relationship.setStartOfRelationships(null);
+        }
+
+        relationship.setStatus(RelationshipStatus.valueOf(status));
         return relationshipDAO.update(relationship);
     }
 
-    public Relationship delete(Long userFromId, Long userToId) throws BadRequestException, SystemException {
-        log.info("RelationshipService delete method");
-        validateDelete(userFromId, userToId);
+    private void validateStatus(RelationshipStatus relStatus, RelationshipStatus status) throws SystemException{
+        if (relStatus.equals(RelationshipStatus.REQUESTED) && (status.equals(RelationshipStatus.FRIENDS) ||
+                status.equals(RelationshipStatus.REJECTED) || status.equals(RelationshipStatus.CANCELED)))
+            return;
 
-        Relationship relationship = relationshipDAO.get(userFromId, userToId);
-        relationship.setStatus(RelationshipStatus.DELETED);
-        relationship.setStartOfRelationships(null);
+        if (relStatus.equals(RelationshipStatus.FRIENDS) && status.equals(RelationshipStatus.DELETED))
+            return;
 
-        return relationshipDAO.update(relationship);
+        if ((relStatus.equals(RelationshipStatus.REJECTED) || relStatus.equals(RelationshipStatus.DELETED) ||
+                relStatus.equals(RelationshipStatus.CANCELED)) && status.equals(RelationshipStatus.REQUESTED))
+            return;
+
+        throw new SystemException("500: Wrong status update.");
     }
 
     private void validateSave(Long userFromId, Long userToId) throws BadRequestException, SystemException{
-        if (userFromId.equals(userToId) || relationshipDAO.get(userFromId, userToId) != null){
-            log.error("Saving is failed");
-            throw new BadRequestException("400: Bad save logic.");
-        }
-
         ValidateChain chain = new MaxOutcomeRequests();
         chain.setNextChain(new MaxQuantityOfFriends());
         ValidateDate date = new ValidateDate();

@@ -3,6 +3,7 @@ package com.findme.controller;
 import com.findme.exceptions.BadRequestException;
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
+import com.findme.models.RelationshipStatus;
 import com.findme.models.User;
 import com.findme.service.RelationshipService;
 import com.findme.service.UserService;
@@ -50,7 +51,7 @@ public class RelationshipController {
     @RequestMapping(path = "/user/{userId}/delete", method = RequestMethod.PUT)
     public String deleteFromFriends(HttpSession session, Model model, @PathVariable Long userId) throws Exception {
         log.info("RelationshipController deleteFromFriends method");
-        relationshipService.delete(((User) session.getAttribute("user")).getId(), userId);
+        relationshipService.update(((User) session.getAttribute("user")).getId(), userId, RelationshipStatus.DELETED.toString());
         model.addAttribute("user", userService.get(userId));
         return "profile";
     }

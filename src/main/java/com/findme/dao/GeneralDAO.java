@@ -20,6 +20,8 @@ public abstract class GeneralDAO<T> {
     public T get(Long id) throws NotFoundException, SystemException {
         try {
             log.info("General DAO, get method. Getting " + tClass.toString());
+            if (entityManager.find(tClass, id) == null)
+                throw new PersistenceException();
             return entityManager.find(tClass, id);
         } catch (PersistenceException e) {
             log.error(tClass + " " + id + " is not found");

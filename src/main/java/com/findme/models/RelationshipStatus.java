@@ -7,3 +7,10 @@ public enum RelationshipStatus {
     DELETED,
     CANCELED
 }
+
+
+// requested - rejected, friends, canceled
+// friends - deleted
+// rejected - requested
+// deleted - requested
+// canceled - requested
