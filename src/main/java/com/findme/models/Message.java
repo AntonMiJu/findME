@@ -9,6 +9,8 @@ public class Message {
     private Long id;
     private String text;
     private Date dateSent;
+    private Date dateEdited;
+    private Date dateDeleted;
     private Date dateRead;
     private User userFrom;
     private User userTo;
@@ -29,6 +31,16 @@ public class Message {
     @Column(name = "DATE_SENT")
     public Date getDateSent() {
         return dateSent;
+    }
+
+    @Column(name = "DATE_EDITED")
+    public Date getDateEdited() {
+        return dateEdited;
+    }
+
+    @Column(name = "DATE_DELETED")
+    public Date getDateDeleted() {
+        return dateDeleted;
     }
 
     @Column(name = "DATE_READ")
@@ -58,6 +70,14 @@ public class Message {
 
     public void setDateSent(Date dateSent) {
         this.dateSent = dateSent;
+    }
+
+    public void setDateEdited(Date dateEdited) {
+        this.dateEdited = dateEdited;
+    }
+
+    public void setDateDeleted(Date dateDeleted) {
+        this.dateDeleted = dateDeleted;
     }
 
     public void setDateRead(Date dateRead) {

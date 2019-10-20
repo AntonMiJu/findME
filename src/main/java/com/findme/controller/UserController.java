@@ -34,14 +34,12 @@ public class UserController {
     public String profile(HttpSession session, Model model, @PathVariable Long userId) throws Exception {
         log.info("UserController profile method");
         User loginedUser = (User) session.getAttribute("user");
-        User user = null;
+        User user = userService.get(userId);
         Relationship relationship = null;
-
-        user = userService.get(userId);
-//        if (!loginedUser.getId().equals(userId)){
-//            relationship = relationshipService.get(loginedUser.getId(), userId);
-//            model.addAttribute("relationshipStatus", relationship.getStatus().toString());
-//        }
+        if (!loginedUser.getId().equals(userId)){
+            relationship = relationshipService.get(loginedUser.getId(), userId);
+            model.addAttribute("relationshipStatus", relationship.getStatus().toString());
+        }
 
         model.addAttribute("user", user);
         return "profile";
@@ -59,9 +57,7 @@ public class UserController {
     public String login(HttpSession session, @RequestParam(name = "email") String email
             , @RequestParam(name = "password") String password, Model model) throws Exception {
         log.info("UserController login method");
-        User user = null;
-
-        user = userService.login(email, password);
+        User user = userService.login(email, password);
 
         session.setAttribute("user", user);
         model.addAttribute("user", user);

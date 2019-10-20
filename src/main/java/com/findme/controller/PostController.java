@@ -32,52 +32,41 @@ public class PostController {
     }
 
     @RequestMapping(path = "/user/{userId}/create_post", method = RequestMethod.POST)
-    public String createPost(HttpSession session, Model model, @PathVariable Long userId) throws Exception {
+    public String createPost(HttpSession session, Model model,@ModelAttribute Post post, @PathVariable Long userId) throws Exception {
         log.info("PostController createPost method.");
-        User user = null;
-        Post post = new Post();
         //TODO set message, location, tagged
         post.setUserPosted((User) session.getAttribute("user"));
-        user = userService.get(userId);
-        post.setUserPagePosted(user);
+        post.setUserPagePosted(userService.get(userId));
         postService.save(post);
-        model.addAttribute("user", user);
+        model.addAttribute("user", userService.get(userId));
         return "profile";
     }
 
     @RequestMapping(path = "/post/{userId}", method = RequestMethod.GET)
     public String getPosts(HttpSession session, Model model, @PathVariable Long userId) throws NotFoundException {
         log.info("PostController getPosts method.");
-        List<Post> posts;
-        posts = postService.getByPage(userId);
-        model.addAttribute("posts", posts);
+        model.addAttribute("posts", postService.getByPage(userId));
         return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/by_friends", method = RequestMethod.GET)
     public String getPostsByFriends(HttpSession session, Model model, @PathVariable Long userId) throws NotFoundException {
         log.info("PostController getPostsByFriends method.");
-        List<Post> posts;
-        posts = postService.getByFriends(userId);
-        model.addAttribute("posts", posts);
+        model.addAttribute("posts", postService.getByFriends(userId));
         return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/owner_posts", method = RequestMethod.GET)
     public String getPostsOnlyOwnerOfPage(HttpSession session, Model model, @PathVariable Long userId) throws NotFoundException {
         log.info("PostController getPostsOnlyOwnerOfPage method.");
-        List<Post> posts;
-        posts = postService.getByUserPostedId(userId, userId);
-        model.addAttribute("posts", posts);
+        model.addAttribute("posts", postService.getByUserPostedId(userId, userId));
         return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/by_user_id", method = RequestMethod.GET)
     public String getPosts(HttpSession session, Model model, @PathVariable Long userId, @RequestParam(name = "userPostedId") Long userPostedId) throws NotFoundException {
         log.info("PostController getPosts method.");
-        List<Post> posts;
-        posts = postService.getByUserPostedId(userId, userPostedId);
-        model.addAttribute("posts", posts);
+        model.addAttribute("posts", postService.getByUserPostedId(userId, userPostedId));
         return "posts";
     }
 
