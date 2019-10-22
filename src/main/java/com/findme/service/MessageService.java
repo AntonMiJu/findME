@@ -27,6 +27,17 @@ public class MessageService {
         return messageDAO.get(firstUserId, secondUserId);
     }
 
+    public Message readMessage(Message message) throws SystemException, NotFoundException, BadRequestException{
+        log.info("MessageService readMessage method.");
+        if (message.getDateRead() != null || messageDAO.get(message.getId()) == null){
+            log.error("Wrong read logic");
+            throw new BadRequestException("Message must exist and be not read.");
+        }
+
+        message.setDateRead(new Date());
+        return messageDAO.update(message);
+    }
+
     public Message writeMessage(Message message) throws SystemException, BadRequestException {
         log.info("MessageService writeMessage method.");
         validateWriteMessage(message);
@@ -41,8 +52,14 @@ public class MessageService {
         return messageDAO.update(message);
     }
 
-    public void delete(Long id) throws SystemException {
-        messageDAO.delete(id);
+    public void delete(Long id) throws SystemException, NotFoundException, BadRequestException {
+        Message message = messageDAO.get(id);
+        if (message.getDateDeleted() != null || message.getDateRead()!=null){
+            log.error("Message was already read or deleted.");
+            throw new BadRequestException("Message was already read or deleted.");
+        }
+        message.setDateDeleted(new Date());
+        messageDAO.update(message);
     }
 
     private void validateWriteMessage(Message message) throws BadRequestException{

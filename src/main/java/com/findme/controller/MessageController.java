@@ -36,6 +36,13 @@ public class MessageController {
         return "messages";
     }
 
+    @RequestMapping(path = "/messages/read", method = RequestMethod.PUT)
+    public String readMessage(@ModelAttribute Message message) throws Exception{
+        log.info("MessageController readMessage method.");
+        messageService.readMessage(message);
+        return "messages";
+    }
+
     @RequestMapping(path = "/send_message/{userId}", method = RequestMethod.POST)
     public String writeMessage(HttpSession session, @ModelAttribute Message message, @PathVariable Long userId) throws Exception {
         log.info("MessageController writeMessage method");
