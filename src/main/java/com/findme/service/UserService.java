@@ -5,16 +5,16 @@ import com.findme.exceptions.BadRequestException;
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.User;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+@Log4j
 @Service
 public class UserService {
     private UserDAO userDAO;
-    private static final Logger log = Logger.getLogger(UserService.class);
 
     @Autowired
     public UserService(UserDAO userDAO) {

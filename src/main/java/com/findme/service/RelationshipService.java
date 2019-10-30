@@ -12,18 +12,18 @@ import com.findme.service.validate.MaxOutcomeRequests;
 import com.findme.service.validate.MaxQuantityOfFriends;
 import com.findme.service.validate.MinTimeOfFriendship;
 import com.findme.service.validate.ValidateChain;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
+@Log4j
 @Service
 public class RelationshipService {
     private RelationshipDAO relationshipDAO;
     private UserDAO userDAO;
-    private static final Logger log = Logger.getLogger(RelationshipService.class);
 
     @Autowired
     public RelationshipService(RelationshipDAO relationshipDAO, UserDAO userDAO) {

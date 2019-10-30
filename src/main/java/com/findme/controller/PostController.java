@@ -1,14 +1,11 @@
 package com.findme.controller;
 
-import com.findme.exceptions.BadRequestException;
-import com.findme.exceptions.ForbiddenException;
 import com.findme.exceptions.NotFoundException;
-import com.findme.exceptions.SystemException;
 import com.findme.models.Post;
 import com.findme.models.User;
 import com.findme.service.PostService;
 import com.findme.service.UserService;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
+@Log4j
 @Controller
 @Interceptors(ValidateInterceptor.class)
 public class PostController {
-    private static final Logger log = Logger.getLogger(PostController.class);
     private PostService postService;
     private UserService userService;
 

@@ -3,9 +3,7 @@ package com.findme.dao;
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Post;
-import com.findme.models.Relationship;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.*;
 
+@Log4j
 @Repository
 @Transactional
 public class PostDAO extends GeneralDAO<Post> {
@@ -25,8 +24,6 @@ public class PostDAO extends GeneralDAO<Post> {
     private static final String getNext20News = "SELECT P.* FROM POSTS P INNER JOIN RELATIONSHIPS R ON " +
             "((P.USER_POSTED_ID = R.USER_FROM_ID AND R.USER_TO_ID = :userId AND STATUS = 'FRIENDS') OR (P.USER_POSTED_ID = R.USER_TO_ID AND R.USER_FROM_ID = :userId AND STATUS = 'FRIENDS')) " +
             "ORDER BY DATE_POSTED DESC OFFSET :lastIndex ROWS FETCH NEXT 20 ROWS ONLY;";
-
-    private static final Logger log = Logger.getLogger(PostDAO.class);
 
     public PostDAO() {
         settClass(Post.class);

@@ -3,17 +3,20 @@ package com.findme.dao;
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Message;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@Log4j
+@Repository
+@Transactional
 public class MessageDAO extends GeneralDAO<Message> {
-    private static final String get = "SELECT * FROM MESSAGES WHERE (USER_FROM_ID = :userFromId AND USER_TO_ID = :userToId)" +
+    private static final String getByTwoIds = "SELECT * FROM MESSAGES WHERE (USER_FROM_ID = :userFromId AND USER_TO_ID = :userToId)" +
             " OR (USER_FROM_ID = :userFromId AND USER_TO_ID = :userToId ) AND DATE_DELETED IS NOT NULL;";
-
-    private static final Logger log = Logger.getLogger(MessageDAO.class);
 
     public MessageDAO() {
         settClass(Message.class);
@@ -22,9 +25,9 @@ public class MessageDAO extends GeneralDAO<Message> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<Message> get(Long firstUserId, Long secondUserId) {
+    public List<Message> getByTwoIds(Long firstUserId, Long secondUserId) {
         log.info("MessageDAO get method. Getting list of messages by two ids.");
-        return entityManager.createNativeQuery(get)
+        return entityManager.createNativeQuery(getByTwoIds)
                 .setParameter("userFromId", firstUserId)
                 .setParameter("userToId", secondUserId)
                 .getResultList();

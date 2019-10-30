@@ -6,16 +6,18 @@ import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Message;
 import com.findme.models.RelationshipStatus;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
+@Log4j
+@Service
 public class MessageService {
     private MessageDAO messageDAO;
     private RelationshipService relationshipService;
-    private static final Logger log = Logger.getLogger(MessageService.class);
 
     @Autowired
     public MessageService(MessageDAO messageDAO, RelationshipService relationshipService) {
@@ -24,7 +26,7 @@ public class MessageService {
     }
 
     public List<Message> get(Long firstUserId, Long secondUserId) {
-        return messageDAO.get(firstUserId, secondUserId);
+        return messageDAO.getByTwoIds(firstUserId, secondUserId);
     }
 
     public Message readMessage(Message message) throws SystemException, NotFoundException, BadRequestException{
@@ -46,8 +48,8 @@ public class MessageService {
         return messageDAO.save(message);
     }
 
-    public Message update(Message message) throws SystemException, BadRequestException {
-        validateUpdate(message);
+    public Message edit(Message message) throws SystemException, BadRequestException {
+        validateEdit(message);
         message.setDateEdited(new Date());
         return messageDAO.update(message);
     }
@@ -63,7 +65,8 @@ public class MessageService {
     }
 
     private void validateWriteMessage(Message message) throws BadRequestException{
-        if (!relationshipService.get(message.getUserFrom().getId(), message.getUserTo().getId()).getStatus().equals(RelationshipStatus.FRIENDS)) {
+        if (relationshipService.get(message.getUserFrom().getId(), message.getUserTo().getId()) == null ||
+                !relationshipService.get(message.getUserFrom().getId(), message.getUserTo().getId()).getStatus().equals(RelationshipStatus.FRIENDS)) {
             log.error("Bad request. Users must be friends");
             throw new BadRequestException("You must be friends.");
         }
@@ -73,7 +76,7 @@ public class MessageService {
         }
     }
 
-    private void validateUpdate(Message message) throws BadRequestException{
+    private void validateEdit(Message message) throws BadRequestException{
         validateWriteMessage(message);
         if (message.getDateRead()!=null || message.getDateEdited()!=null || message.getDateDeleted()!=null){
             log.error("Bad request. Message is already read or edited or deleted.");

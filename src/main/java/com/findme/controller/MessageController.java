@@ -4,6 +4,7 @@ import com.findme.models.Message;
 import com.findme.models.User;
 import com.findme.service.MessageService;
 import com.findme.service.UserService;
+import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpSession;
 
+@Log4j
 @Controller
 @Interceptors(ValidateInterceptor.class)
 public class MessageController {
     private MessageService messageService;
     private UserService userService;
-    private static final Logger log = Logger.getLogger(MessageController.class);
 
     @Autowired
     public MessageController(MessageService messageService, UserService userService) {
@@ -52,10 +53,10 @@ public class MessageController {
         return "messages";
     }
 
-    @RequestMapping(path = "/update_message", method = RequestMethod.PUT)
-    public String updateMessage(HttpSession session, @ModelAttribute Message message) throws Exception{
+    @RequestMapping(path = "/edit_message", method = RequestMethod.PUT)
+    public String editMessage(HttpSession session, @ModelAttribute Message message) throws Exception{
         log.info("MessageController updateMessage method");
-        messageService.update(message);
+        messageService.edit(message);
         return "messages";
     }
 

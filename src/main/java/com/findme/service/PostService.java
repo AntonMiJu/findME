@@ -7,6 +7,7 @@ import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Post;
 import com.findme.models.RelationshipStatus;
+import lombok.extern.log4j.Log4j;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,11 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+@Log4j
 @Service
 public class PostService {
     private PostDAO postDAO;
     private RelationshipService relationshipService;
-    private static final Logger log = Logger.getLogger(PostService.class);
 
     @Autowired
     public PostService(PostDAO postDAO, RelationshipService relationshipService) {

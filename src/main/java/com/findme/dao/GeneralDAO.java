@@ -2,16 +2,16 @@ package com.findme.dao;
 
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+@Log4j
 @Transactional
 public abstract class GeneralDAO<T> {
-    private static final Logger log = Logger.getLogger(GeneralDAO.class);
     private Class<T> tClass;
 
     @PersistenceContext

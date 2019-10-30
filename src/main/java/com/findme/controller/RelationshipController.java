@@ -1,13 +1,11 @@
 package com.findme.controller;
 
-import com.findme.exceptions.BadRequestException;
-import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.RelationshipStatus;
 import com.findme.models.User;
 import com.findme.service.RelationshipService;
 import com.findme.service.UserService;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpSession;
 
+@Log4j
 @Controller
 @Interceptors(ValidateInterceptor.class)
 public class RelationshipController {
-    private static final Logger log = Logger.getLogger(RelationshipController.class);
     private UserService userService;
     private RelationshipService relationshipService;
 

@@ -1,16 +1,18 @@
 package com.findme.dao;
 
-import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Relationship;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@Log4j
 @Repository
+@Transactional
 public class RelationshipDAO extends GeneralDAO<Relationship> {
     private static final String get = "SELECT * FROM RELATIONSHIPS WHERE USER_FROM_ID = :userFromId " +
             "AND USER_TO_ID = :userToId ;";
@@ -20,8 +22,6 @@ public class RelationshipDAO extends GeneralDAO<Relationship> {
             "AND STATUS = 'REQUEST_SENT'";
     private static final String getFriendsList = "SELECT * FROM RELATIONSHIPS WHERE (USER_FROM_ID = :userFromId" +
             " OR USER_TO_ID = :userToId ) AND STATUS = 'FRIENDS'";
-
-    private static final Logger log = Logger.getLogger(RelationshipDAO.class);
 
     @PersistenceContext
     private EntityManager entityManager;

@@ -3,7 +3,7 @@ package com.findme.dao;
 import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.User;
-import org.apache.log4j.Logger;
+import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,13 +11,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+@Log4j
 @Repository
 @Transactional
 public class UserDAO extends GeneralDAO<User> {
     private static final String findUserByPhoneOrEmail = "SELECT * FROM USERS WHERE PHONE = :phone OR EMAIL = :email ;";
     private static final String findUserByEmailAndPassword = "SELECT * FROM USERS WHERE EMAIL = :email AND PASSWORD = :pass ;";
-
-    private static final Logger log = Logger.getLogger(UserDAO.class);
 
     @PersistenceContext
     private EntityManager entityManager;
