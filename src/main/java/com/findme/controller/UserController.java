@@ -33,7 +33,7 @@ public class UserController {
         log.info("UserController profile method");
         User loginedUser = (User) session.getAttribute("user");
         User user = userService.get(userId);
-        Relationship relationship = null;
+        Relationship relationship;
         if (!loginedUser.getId().equals(userId)){
             relationship = relationshipService.get(loginedUser.getId(), userId);
             model.addAttribute("relationshipStatus", relationship.getStatus().toString());
@@ -52,10 +52,14 @@ public class UserController {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
+    //TODO paramts should be places in body
+    //quesion for you -  why?
     public String login(HttpSession session, @RequestParam(name = "email") String email
             , @RequestParam(name = "password") String password, Model model) throws Exception {
         log.info("UserController login method");
         User user = userService.login(email, password);
+
+        //TODO what method will return if user not found??
 
         session.setAttribute("user", user);
         model.addAttribute("user", user);
