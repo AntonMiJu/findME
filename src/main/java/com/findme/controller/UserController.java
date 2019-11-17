@@ -54,7 +54,7 @@ public class UserController {
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     //TODO paramts should be places in body
-    //quesion for you -  why?
+    //question for you -  why?
     public String login(HttpSession session, @RequestParam(name = "email") String email
             , @RequestParam(name = "password") String password, Model model) throws Exception {
         log.info("UserController login method");
