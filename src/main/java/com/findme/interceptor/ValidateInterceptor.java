@@ -7,6 +7,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.interceptor.AroundInvoke;
 import javax.servlet.http.HttpSession;
 
+//TODO should be moved to separate package
 public class ValidateInterceptor implements HandlerInterceptor {
     private static final Logger log = Logger.getLogger(ValidateInterceptor.class);
 
