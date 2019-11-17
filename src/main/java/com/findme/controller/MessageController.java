@@ -1,11 +1,11 @@
 package com.findme.controller;
 
+import com.findme.interceptor.ValidateInterceptor;
 import com.findme.models.Message;
 import com.findme.models.User;
 import com.findme.service.MessageService;
 import com.findme.service.UserService;
 import lombok.extern.log4j.Log4j;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

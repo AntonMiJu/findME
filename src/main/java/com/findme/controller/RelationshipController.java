@@ -1,6 +1,7 @@
 package com.findme.controller;
 
 import com.findme.exceptions.SystemException;
+import com.findme.interceptor.ValidateInterceptor;
 import com.findme.models.RelationshipStatus;
 import com.findme.models.User;
 import com.findme.service.RelationshipService;

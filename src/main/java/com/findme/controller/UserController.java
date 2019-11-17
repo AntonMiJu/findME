@@ -1,6 +1,7 @@
 package com.findme.controller;
 
 import com.findme.exceptions.SystemException;
+import com.findme.interceptor.ValidateInterceptor;
 import com.findme.models.Relationship;
 import com.findme.models.User;
 import com.findme.service.RelationshipService;
@@ -33,7 +34,7 @@ public class UserController {
         log.info("UserController profile method");
         User loginedUser = (User) session.getAttribute("user");
         User user = userService.get(userId);
-        Relationship relationship = null;
+        Relationship relationship;
         if (!loginedUser.getId().equals(userId)){
             relationship = relationshipService.get(loginedUser.getId(), userId);
             model.addAttribute("relationshipStatus", relationship.getStatus().toString());

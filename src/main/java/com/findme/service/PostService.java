@@ -8,7 +8,6 @@ import com.findme.exceptions.SystemException;
 import com.findme.models.Post;
 import com.findme.models.RelationshipStatus;
 import lombok.extern.log4j.Log4j;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,7 @@
 package com.findme.controller;
 
 import com.findme.exceptions.NotFoundException;
+import com.findme.interceptor.ValidateInterceptor;
 import com.findme.models.Post;
 import com.findme.models.User;
 import com.findme.service.PostService;

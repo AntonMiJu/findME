@@ -56,7 +56,7 @@ public class MessageService {
 
     public void delete(Long id) throws SystemException, NotFoundException, BadRequestException {
         Message message = messageDAO.get(id);
-        if (message.getDateDeleted() != null || message.getDateRead()!=null){
+        if (message == null || message.getDateDeleted() != null || message.getDateRead()!=null){
             log.error("Message was already read or deleted.");
             throw new BadRequestException("Message was already read or deleted.");
         }

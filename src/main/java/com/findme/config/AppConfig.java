@@ -1,6 +1,6 @@
 package com.findme.config;
 
-import com.findme.controller.ValidateInterceptor;
+import com.findme.interceptor.ValidateInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

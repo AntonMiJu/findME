@@ -64,7 +64,7 @@ public class RelationshipService {
 
     public Relationship update(Long userFromId, Long userToId, String status) throws SystemException, BadRequestException{
         log.info("RelationshipService update method");
-        if (userFromId.equals(userToId) || relationshipDAO.get(userFromId, userToId).getStatus().toString().equals(status)){
+        if (userFromId.equals(userToId) || relationshipDAO.get(userFromId, userToId)==null || relationshipDAO.get(userFromId, userToId).getStatus().toString().equals(status)){
             log.error("Updating is failed");
             throw new BadRequestException("400: Bad update logic.");
         }

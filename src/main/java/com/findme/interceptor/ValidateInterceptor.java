@@ -1,4 +1,4 @@
-package com.findme.controller;
+package com.findme.interceptor;
 
 import com.findme.exceptions.ForbiddenException;
 import org.apache.log4j.Logger;

@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 
 @Log4j
 @Transactional
@@ -20,12 +19,7 @@ public abstract class GeneralDAO<T> {
     public T get(Long id) throws NotFoundException, SystemException {
         try {
             log.info("General DAO, get method. Getting " + tClass.toString());
-            if (entityManager.find(tClass, id) == null)
-                throw new PersistenceException();
             return entityManager.find(tClass, id);
-        } catch (PersistenceException e) {
-            log.error(tClass + " " + id + " is not found");
-            throw new NotFoundException("404: File is not found.");
         } catch (Exception e) {
             log.error("Getting " + id + " is failed");
             throw new SystemException("500: Finding file is failed.");
