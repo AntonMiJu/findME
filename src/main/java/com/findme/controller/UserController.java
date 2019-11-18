@@ -55,15 +55,14 @@ public class UserController {
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     //TODO paramts should be places in body
     //question for you -  why?
-    public String login(HttpSession session, @RequestParam(name = "email") String email
-            , @RequestParam(name = "password") String password, Model model) throws Exception {
+    public String login(HttpSession session, @RequestBody User user, Model model) throws Exception {
         log.info("UserController login method");
-        User user = userService.login(email, password);
+        User loginedUser = userService.login(user.getEmail(), user.getPassword());
 
         //TODO what method will return if user not found??
 
-        session.setAttribute("user", user);
-        model.addAttribute("user", user);
+        session.setAttribute("user", loginedUser);
+        model.addAttribute("user", loginedUser);
         return "profile";
     }
 
