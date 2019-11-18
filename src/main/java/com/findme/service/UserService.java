@@ -26,12 +26,12 @@ public class UserService {
         return userDAO.get(id);
     }
 
-    public User login(String email, String password) throws SystemException, NotFoundException {
+    public User login(String email, String password) throws SystemException, BadRequestException {
         log.info("UserService login method");
         User user = userDAO.findUserByEmailAndPassword(email, password);
         if (user == null) {
             log.error("User with email " + email + " and password " + password + " not found");
-            throw new NotFoundException("404: User not found");
+            throw new BadRequestException("400: User not found");
         }
         return user;
     }
