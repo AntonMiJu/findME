@@ -2,7 +2,6 @@ package com.findme.service;
 
 import com.findme.dao.MessageDAO;
 import com.findme.exceptions.BadRequestException;
-import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Message;
 import com.findme.models.RelationshipStatus;
@@ -29,7 +28,7 @@ public class MessageService {
         return messageDAO.getByTwoIds(firstUserId, secondUserId);
     }
 
-    public Message readMessage(Message message) throws SystemException, NotFoundException, BadRequestException{
+    public Message readMessage(Message message) throws SystemException, BadRequestException{
         log.info("MessageService readMessage method.");
         if (message.getDateRead() != null || messageDAO.get(message.getId()) == null){
             log.error("Wrong read logic");
@@ -54,7 +53,7 @@ public class MessageService {
         return messageDAO.update(message);
     }
 
-    public void delete(Long id) throws SystemException, NotFoundException, BadRequestException {
+    public void delete(Long id) throws SystemException, BadRequestException {
         Message message = messageDAO.get(id);
         if (message == null || message.getDateDeleted() != null || message.getDateRead()!=null){
             log.error("Message was already read or deleted.");

@@ -2,7 +2,6 @@ package com.findme.service;
 
 import com.findme.dao.UserDAO;
 import com.findme.exceptions.BadRequestException;
-import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.User;
 import lombok.extern.log4j.Log4j;
@@ -21,7 +20,7 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public User get(Long id) throws NotFoundException, SystemException {
+    public User get(Long id) throws SystemException {
         log.info("UserService get method");
         return userDAO.get(id);
     }
@@ -37,7 +36,7 @@ public class UserService {
     }
 
     public User save(User user) throws SystemException, BadRequestException {
-        if (userDAO.findUserByPhoneOrEmail(user.getEmail(), user.getPhone()) != null){
+        if (userDAO.findUserByPhoneOrEmail(user.getEmail(), user.getPhone()) != null) {
             log.error("User with email " + user.getEmail() + " and password " + user.getPhone() + " already exist");
             throw new BadRequestException("400: Save failed");
         }

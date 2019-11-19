@@ -1,6 +1,5 @@
 package com.findme.dao;
 
-import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.User;
 import lombok.extern.log4j.Log4j;
@@ -58,7 +57,7 @@ public class UserDAO extends GeneralDAO<User> {
     }
 
     @Override
-    public User get(Long id) throws NotFoundException, SystemException {
+    public User get(Long id) throws SystemException {
         return super.get(id);
     }
 

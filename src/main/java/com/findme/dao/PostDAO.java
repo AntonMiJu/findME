@@ -1,6 +1,5 @@
 package com.findme.dao;
 
-import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Post;
 import lombok.extern.log4j.Log4j;
@@ -71,7 +70,7 @@ public class PostDAO extends GeneralDAO<Post> {
     }
 
     @Override
-    public Post get(Long id) throws NotFoundException, SystemException {
+    public Post get(Long id) throws SystemException {
         return super.get(id);
     }
 

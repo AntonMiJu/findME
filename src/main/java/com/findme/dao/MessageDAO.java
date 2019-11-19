@@ -1,6 +1,5 @@
 package com.findme.dao;
 
-import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Message;
 import lombok.extern.log4j.Log4j;
@@ -34,7 +33,7 @@ public class MessageDAO extends GeneralDAO<Message> {
     }
 
     @Override
-    public Message get(Long id) throws NotFoundException, SystemException {
+    public Message get(Long id) throws SystemException {
         return super.get(id);
     }
 

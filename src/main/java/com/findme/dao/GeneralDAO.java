@@ -1,6 +1,5 @@
 package com.findme.dao;
 
-import com.findme.exceptions.NotFoundException;
 import com.findme.exceptions.SystemException;
 import lombok.extern.log4j.Log4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +15,7 @@ public abstract class GeneralDAO<T> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public T get(Long id) throws NotFoundException, SystemException {
+    public T get(Long id) throws SystemException {
         try {
             log.info("General DAO, get method. Getting " + tClass.toString());
             return entityManager.find(tClass, id);

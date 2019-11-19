@@ -1,6 +1,6 @@
 package com.findme.controller;
 
-import com.findme.exceptions.NotFoundException;
+import com.findme.exceptions.BadRequestException;
 import com.findme.interceptor.ValidateInterceptor;
 import com.findme.models.Post;
 import com.findme.models.User;
@@ -40,28 +40,28 @@ public class PostController {
     }
 
     @RequestMapping(path = "/post/{userId}", method = RequestMethod.GET)
-    public String getPosts(HttpSession session, Model model, @PathVariable Long userId) throws NotFoundException {
+    public String getPosts(HttpSession session, Model model, @PathVariable Long userId) throws BadRequestException {
         log.info("PostController getPosts method.");
         model.addAttribute("posts", postService.getByPage(userId));
         return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/by_friends", method = RequestMethod.GET)
-    public String getPostsByFriends(HttpSession session, Model model, @PathVariable Long userId) throws NotFoundException {
+    public String getPostsByFriends(HttpSession session, Model model, @PathVariable Long userId) throws BadRequestException {
         log.info("PostController getPostsByFriends method.");
         model.addAttribute("posts", postService.getByFriends(userId));
         return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/owner_posts", method = RequestMethod.GET)
-    public String getPostsOnlyOwnerOfPage(HttpSession session, Model model, @PathVariable Long userId) throws NotFoundException {
+    public String getPostsOnlyOwnerOfPage(HttpSession session, Model model, @PathVariable Long userId) throws BadRequestException {
         log.info("PostController getPostsOnlyOwnerOfPage method.");
         model.addAttribute("posts", postService.getByUserPostedId(userId, userId));
         return "posts";
     }
 
     @RequestMapping(path = "/post/{userId}/by_user_id", method = RequestMethod.GET)
-    public String getPosts(HttpSession session, Model model, @PathVariable Long userId, @RequestParam(name = "userPostedId") Long userPostedId) throws NotFoundException {
+    public String getPostsByPostedId(HttpSession session, Model model, @PathVariable Long userId, @RequestParam(name = "userPostedId") Long userPostedId) throws BadRequestException {
         log.info("PostController getPosts method.");
         model.addAttribute("posts", postService.getByUserPostedId(userId, userPostedId));
         return "posts";
