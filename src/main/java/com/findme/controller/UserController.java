@@ -53,13 +53,12 @@ public class UserController {
     }
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String login(HttpSession session, @RequestBody User user, Model model) throws Exception {
+    public String login(HttpSession session, @RequestBody User user) throws Exception {
         log.info("UserController login method");
         User loginedUser = userService.login(user.getEmail(), user.getPassword());
 
         session.setAttribute("user", loginedUser);
-        model.addAttribute("user", loginedUser);
-        return "profile";
+        return "200";
     }
 
     @RequestMapping(path = "/logout", method = RequestMethod.GET)
@@ -69,7 +68,8 @@ public class UserController {
         User user = (User) session.getAttribute("user");
         user.setDateLastActive(new Date());
         userService.update(user);
+        
         session.setAttribute("user", null);
-        return "index";
+        return "200";
     }
 }
