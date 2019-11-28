@@ -38,4 +38,11 @@ public class PostStatusController {
         model.addAttribute("user", userService.get(userId));
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @RequestMapping(path = "/user/{userId}/delete_post", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deletePost(HttpSession session, @RequestParam(name = "postId") Long postId) throws Exception{
+        log.info("PostStatusController deletePost method.");
+        postService.delete(((User) session.getAttribute("user")).getId(), postId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -88,8 +88,13 @@ public class PostService {
         return postDAO.update(post);
     }
 
-    public void delete(Long id) throws SystemException {
+    public void delete(Long userId, Long postId) throws SystemException, ForbiddenException {
         log.info("PostService delete method");
-        postDAO.delete(id);
+        Post post = postDAO.get(postId);
+        if (userId.equals(post.getUserPosted().getId()) || userId.equals(post.getUserPagePosted().getId())){
+            log.info("");
+            throw new ForbiddenException("You can`t delete this post.");
+        }
+        postDAO.delete(postId);
     }
 }
