@@ -75,26 +75,35 @@ public class PostService {
             log.error("You can post on this page");
             throw new ForbiddenException("403: You can post on this page");
         }
-        if (post.getMessage().length() > 200 || post.getMessage().contains("http://") || post.getMessage().contains("https://")) {
-            log.error("Bad message format");
-            throw new BadRequestException("400: Bad message format");
-        }
+        validateMessage(post);
         post.setDatePosted(new Date());
         return postDAO.save(post);
     }
 
-    public Post update(Post post) throws SystemException {
+    public Post update(Long userId, Post post) throws SystemException, ForbiddenException, BadRequestException {
         log.info("PostService update method");
+        if (userId.equals(post.getUserPosted().getId())){
+            log.error("You can`t update this post.");
+            throw new ForbiddenException("403: You can`t update this post.");
+        }
+        validateMessage(post);
         return postDAO.update(post);
     }
 
     public void delete(Long userId, Long postId) throws SystemException, ForbiddenException {
         log.info("PostService delete method");
         Post post = postDAO.get(postId);
-        if (userId.equals(post.getUserPosted().getId()) || userId.equals(post.getUserPagePosted().getId())){
-            log.info("");
-            throw new ForbiddenException("You can`t delete this post.");
+        if (!userId.equals(post.getUserPosted().getId()) && !userId.equals(post.getUserPagePosted().getId())){
+            log.error("You can`t delete this post.");
+            throw new ForbiddenException("403: You can`t delete this post.");
         }
         postDAO.delete(postId);
+    }
+
+    private void validateMessage(Post post) throws BadRequestException{
+        if (post.getMessage().length() > 200 || post.getMessage().contains("http://") || post.getMessage().contains("https://")) {
+            log.error("Bad message format");
+            throw new BadRequestException("400: Bad message format");
+        }
     }
 }
