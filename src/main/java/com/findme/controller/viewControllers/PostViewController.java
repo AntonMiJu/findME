@@ -1,11 +1,9 @@
-package com.findme.controller;
+package com.findme.controller.viewControllers;
 
 import com.findme.exceptions.BadRequestException;
 import com.findme.interceptor.ValidateInterceptor;
-import com.findme.models.Post;
 import com.findme.models.User;
 import com.findme.service.PostService;
-import com.findme.service.UserService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,25 +16,12 @@ import javax.servlet.http.HttpSession;
 @Log4j
 @Controller
 @Interceptors(ValidateInterceptor.class)
-public class PostController {
+public class PostViewController {
     private PostService postService;
-    private UserService userService;
 
     @Autowired
-    public PostController(PostService postService, UserService userService) {
+    public PostViewController(PostService postService) {
         this.postService = postService;
-        this.userService = userService;
-    }
-
-    @RequestMapping(path = "/user/{userId}/create_post", method = RequestMethod.POST)
-    public String createPost(HttpSession session, Model model,@ModelAttribute Post post, @PathVariable Long userId) throws Exception {
-        log.info("PostController createPost method.");
-        //TODO set message, location, tagged
-        post.setUserPosted((User) session.getAttribute("user"));
-        post.setUserPagePosted(userService.get(userId));
-        postService.save(post);
-        model.addAttribute("user", userService.get(userId));
-        return "profile";
     }
 
     @RequestMapping(path = "/post/{userId}", method = RequestMethod.GET)

@@ -1,6 +1,5 @@
-package com.findme.controller;
+package com.findme.controller.viewControllers;
 
-import com.findme.exceptions.SystemException;
 import com.findme.interceptor.ValidateInterceptor;
 import com.findme.models.Relationship;
 import com.findme.models.User;
@@ -14,16 +13,15 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.interceptor.Interceptors;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
 
 @Log4j
 @Controller
-public class UserController {
+public class UserViewController {
     private UserService userService;
     private RelationshipService relationshipService;
 
     @Autowired
-    public UserController(UserService userService, RelationshipService relationshipService) {
+    public UserViewController(UserService userService, RelationshipService relationshipService) {
         this.userService = userService;
         this.relationshipService = relationshipService;
     }
@@ -31,7 +29,7 @@ public class UserController {
     @RequestMapping(path = "/user/{userId}", method = RequestMethod.GET)
     @Interceptors(ValidateInterceptor.class)
     public String profile(HttpSession session, Model model, @PathVariable Long userId) throws Exception {
-        log.info("UserController profile method");
+        log.info("UserViewController profile method");
         User loginedUser = (User) session.getAttribute("user");
         User user = userService.get(userId);
         Relationship relationship;
@@ -42,34 +40,5 @@ public class UserController {
 
         model.addAttribute("user", user);
         return "profile";
-    }
-
-    @RequestMapping(path = "/register-user", method = RequestMethod.POST)
-    public String registerUser(@ModelAttribute User user) throws Exception {
-        log.info("UserController registerUser method");
-        userService.save(user);
-
-        return "profile";
-    }
-
-    @RequestMapping(path = "/login", method = RequestMethod.POST)
-    public String login(HttpSession session, @RequestBody User user) throws Exception {
-        log.info("UserController login method");
-        User loginedUser = userService.login(user.getEmail(), user.getPassword());
-
-        session.setAttribute("user", loginedUser);
-        return "200";
-    }
-
-    @RequestMapping(path = "/logout", method = RequestMethod.GET)
-    @Interceptors(ValidateInterceptor.class)
-    public String logout(HttpSession session) throws SystemException {
-        log.info("UserController logout method");
-        User user = (User) session.getAttribute("user");
-        user.setDateLastActive(new Date());
-        userService.update(user);
-        
-        session.setAttribute("user", null);
-        return "200";
     }
 }

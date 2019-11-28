@@ -1,4 +1,4 @@
-package com.findme.controller;
+package com.findme.controller.viewControllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
