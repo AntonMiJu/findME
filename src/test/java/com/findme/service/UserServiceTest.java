@@ -3,19 +3,18 @@ package com.findme.service;
 import com.findme.exceptions.BadRequestException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.User;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.findme.config.TestBeanConfig;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestBeanConfig.class)
+@WebAppConfiguration
 public class UserServiceTest {
     @Autowired
     private UserService userService;
@@ -29,7 +28,23 @@ public class UserServiceTest {
     @Before
     public void setUp() throws Exception {
         admin = userService.get(Long.parseLong("1"));
-        userNotExist = userService.get(Long.parseLong("0"));
+
+        userNotExist = new User();
+        userNotExist.setId(Long.parseLong("1000000"));
+        userNotExist.setEmail("notExist");
+        userNotExist.setPassword("notExist");
+    }
+
+    @Test
+    public void getNotExistUser() throws SystemException {
+        userService.get(Long.parseLong("0"));
+    }
+
+    @Test
+    public void getSuccessful() throws SystemException {
+        User user = userService.get(Long.parseLong("1"));
+
+        Assert.assertEquals(admin, user);
     }
 
     @Test
@@ -38,9 +53,11 @@ public class UserServiceTest {
         userService.login(userNotExist.getEmail(), userNotExist.getPassword());
     }
 
-    @Ignore
     @Test
-    public void login() {
+    public void loginSuccessful() throws BadRequestException,SystemException{
+        User user = userService.login(admin.getEmail(), admin.getPassword());
+
+        Assert.assertEquals(admin, user);
     }
 
     @Test
