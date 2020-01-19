@@ -32,12 +32,15 @@ public class UserServiceTest {
         userNotExist = new User();
         userNotExist.setId(Long.parseLong("1000000"));
         userNotExist.setEmail("notExist");
+        userNotExist.setPhone("notExist");
         userNotExist.setPassword("notExist");
     }
 
     @Test
     public void getNotExistUser() throws SystemException {
-        userService.get(Long.parseLong("0"));
+        User user = userService.get(Long.parseLong("0"));
+
+        Assert.assertNull(user);
     }
 
     @Test
@@ -66,9 +69,22 @@ public class UserServiceTest {
         userService.save(admin);
     }
 
-    @Ignore
     @Test
-    public void save() {
+    public void save() throws SystemException, BadRequestException{
+        User userForSave = new User();
+        userForSave.setId(Long.parseLong("2"));
+        userForSave.setEmail("user");
+        userForSave.setPhone("000");
+        userForSave.setPassword("pass");
+
+        User user = userService.save(userForSave);
+
+        Assert.assertEquals(userForSave, user);
+    }
+
+    @Test
+    public void updateUserNotExist() throws SystemException{
+        userService.update(userNotExist);
     }
 
     @Ignore

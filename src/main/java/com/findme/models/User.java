@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -74,4 +75,31 @@ public class User {
 
     @OneToMany(mappedBy = "userTo")
     private List<Message> messagesReceived;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(phone, user.phone) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(country, user.country) &&
+                Objects.equals(town, user.town) &&
+                Objects.equals(age, user.age) &&
+                Objects.equals(dateRegistered, user.dateRegistered) &&
+                Objects.equals(dateLastActive, user.dateLastActive) &&
+                Objects.equals(relationshipStatus, user.relationshipStatus) &&
+                Objects.equals(religion, user.religion) &&
+                Objects.equals(school, user.school) &&
+                Objects.equals(university, user.university);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, phone, email, password, country, town, age, dateRegistered, dateLastActive, relationshipStatus, religion, school, university);
+    }
 }
