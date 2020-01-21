@@ -12,7 +12,6 @@ import java.util.List;
 
 @Log4j
 @Repository
-@Transactional
 public class MessageDAO extends GeneralDAO<Message> {
     private static final String getByTwoIds = "SELECT * FROM MESSAGES WHERE (USER_FROM_ID = :userFromId AND USER_TO_ID = :userToId)" +
             " OR (USER_FROM_ID = :userFromId AND USER_TO_ID = :userToId ) AND DATE_DELETED IS NOT NULL;";
@@ -24,6 +23,7 @@ public class MessageDAO extends GeneralDAO<Message> {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Transactional
     public List<Message> getByTwoIds(Long firstUserId, Long secondUserId) {
         log.info("MessageDAO get method. Getting list of messages by two ids.");
         return entityManager.createNativeQuery(getByTwoIds)

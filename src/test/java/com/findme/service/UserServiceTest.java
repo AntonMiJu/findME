@@ -12,6 +12,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.findme.config.TestBeanConfig;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.Date;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestBeanConfig.class)
 @WebAppConfiguration
@@ -53,6 +55,7 @@ public class UserServiceTest {
     @Test
     public void loginUserNotFound() throws SystemException, BadRequestException {
         thrown.expect(BadRequestException.class);
+
         userService.login(userNotExist.getEmail(), userNotExist.getPassword());
     }
 
@@ -66,6 +69,7 @@ public class UserServiceTest {
     @Test
     public void saveExistedUser() throws BadRequestException, SystemException {
         thrown.expect(BadRequestException.class);
+
         userService.save(admin);
     }
 
@@ -87,9 +91,18 @@ public class UserServiceTest {
         userService.update(userNotExist);
     }
 
-    @Ignore
     @Test
-    public void update() {
+    public void update() throws SystemException {
+        admin.setDateLastActive(new Date());
+
+        User user = userService.update(admin);
+
+        Assert.assertEquals(admin, user);
+    }
+
+    @Test
+    public void deleteUserNotExist() throws SystemException {
+        userService.delete(Long.parseLong("0"));
     }
 
     @Ignore

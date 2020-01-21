@@ -12,7 +12,6 @@ import javax.persistence.PersistenceException;
 
 @Log4j
 @Repository
-@Transactional
 public class UserDAO extends GeneralDAO<User> {
     private static final String findUserByPhoneOrEmail = "SELECT * FROM USERS WHERE PHONE = :phone OR EMAIL = :email ;";
     private static final String findUserByEmailAndPassword = "SELECT * FROM USERS WHERE EMAIL = :email AND PASSWORD = :pass ;";
@@ -24,6 +23,7 @@ public class UserDAO extends GeneralDAO<User> {
         settClass(User.class);
     }
 
+    @Transactional
     public User findUserByPhoneOrEmail(String phone, String email) throws SystemException {
         try {
             log.info("UserDAO findUserByPhoneOrEmail method. Finding by phone: " + phone + ", email: " + email);
@@ -40,6 +40,7 @@ public class UserDAO extends GeneralDAO<User> {
         }
     }
 
+    @Transactional
     public User findUserByEmailAndPassword(String email, String password) throws SystemException {
         try {
             log.info("UserDAO findUserByEmailAndPassword method.  Finding by email: " + email + ", password: " + password);

@@ -12,7 +12,6 @@ import java.util.List;
 
 @Log4j
 @Repository
-@Transactional
 public class RelationshipDAO extends GeneralDAO<Relationship> {
     private static final String get = "SELECT * FROM RELATIONSHIPS WHERE USER_FROM_ID = :userFromId " +
             "AND USER_TO_ID = :userToId ;";
@@ -30,6 +29,7 @@ public class RelationshipDAO extends GeneralDAO<Relationship> {
         settClass(Relationship.class);
     }
 
+    @Transactional
     public Relationship get(Long userFromId, Long userToId) {
         log.info("RelationshipDAO get method. Getting relationship for " + userFromId + " and " + userToId);
         return (Relationship) entityManager.createNativeQuery(get, Relationship.class)
@@ -38,6 +38,7 @@ public class RelationshipDAO extends GeneralDAO<Relationship> {
                 .getSingleResult();
     }
 
+    @Transactional
     public List<Relationship> getIncomeRequests(Long userId) throws SystemException {
         try {
             log.info("RelationshipDAO getIncomeRequests method. Getting requests for " + userId);
@@ -50,6 +51,7 @@ public class RelationshipDAO extends GeneralDAO<Relationship> {
         }
     }
 
+    @Transactional
     public List<Relationship> getOutcomeRequests(Long userId) throws SystemException {
         try {
             log.info("RelationshipDAO getOutcomeRequests method. Getting requests for " + userId);
@@ -62,6 +64,7 @@ public class RelationshipDAO extends GeneralDAO<Relationship> {
         }
     }
 
+    @Transactional
     public List<Relationship> getFriendsList(Long userId) throws SystemException {
         try {
             log.info("RelationshipDAO getFriendsList method. Getting friends for " + userId);
