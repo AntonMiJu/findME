@@ -13,8 +13,8 @@ import java.util.List;
 @Log4j
 @Repository
 public class RelationshipDAO extends GeneralDAO<Relationship> {
-    private static final String get = "SELECT * FROM RELATIONSHIPS WHERE USER_FROM_ID = :userFromId " +
-            "AND USER_TO_ID = :userToId ;";
+    private static final String get = "SELECT * FROM RELATIONSHIPS WHERE ( USER_FROM_ID = :userFromId " +
+            "AND USER_TO_ID = :userToId ) OR ( USER_FROM_ID = :userToId AND USER_TO_ID = :userFromId );";
     private static final String getIncomeRequests = "SELECT USER_FROM_ID FROM RELATIONSHIPS WHERE USER_TO_ID = :userToId " +
             "AND STATUS = 'REQUEST_SENT'";
     private static final String getOutcomeRequests = "SELECT USER_TO_ID FROM RELATIONSHIPS WHERE USER_FROM_ID = :userFromId " +
@@ -30,12 +30,17 @@ public class RelationshipDAO extends GeneralDAO<Relationship> {
     }
 
     @Transactional
-    public Relationship get(Long userFromId, Long userToId) {
-        log.info("RelationshipDAO get method. Getting relationship for " + userFromId + " and " + userToId);
-        return (Relationship) entityManager.createNativeQuery(get, Relationship.class)
-                .setParameter("userFromId", userFromId)
-                .setParameter("userToId", userToId)
-                .getSingleResult();
+    public Relationship get(Long userFromId, Long userToId) throws SystemException{
+        try {
+            log.info("RelationshipDAO get method. Getting relationship for " + userFromId + " and " + userToId);
+            return (Relationship) entityManager.createNativeQuery(get, Relationship.class)
+                    .setParameter("userFromId", userFromId)
+                    .setParameter("userToId", userToId)
+                    .getSingleResult();
+        } catch (Exception e){
+            log.error("Getting is failed");
+            throw new SystemException("500: Something gone wrong.");
+        }
     }
 
     @Transactional

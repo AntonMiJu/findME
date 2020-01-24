@@ -23,6 +23,7 @@ public class Relationship implements Serializable {
     private User userToId;
 
     @Column(name = "STATUS")
+    @Enumerated(EnumType.STRING)
     private RelationshipStatus status;
 
     @Column(name = "START_OF_RLT")

@@ -11,12 +11,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.findme.config.TestBeanConfig;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestBeanConfig.class)
 @WebAppConfiguration
+@Transactional
 public class UserServiceTest {
     @Autowired
     private UserService userService;
@@ -60,7 +62,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void loginSuccessful() throws BadRequestException,SystemException{
+    public void loginSuccessful() throws BadRequestException, SystemException {
         User user = userService.login(admin.getEmail(), admin.getPassword());
 
         Assert.assertEquals(admin, user);
@@ -74,12 +76,12 @@ public class UserServiceTest {
     }
 
     @Test
-    public void save() throws SystemException, BadRequestException{
+    public void save() throws SystemException, BadRequestException {
         User userForSave = new User();
-        userForSave.setId(Long.parseLong("2"));
         userForSave.setEmail("user");
         userForSave.setPhone("000");
         userForSave.setPassword("pass");
+        userForSave.setTagsInPosts(null);
 
         User user = userService.save(userForSave);
 
@@ -87,12 +89,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateUserNotExist() throws SystemException{
+    public void updateUserNotExist() throws SystemException {
+        thrown.expect(SystemException.class);
+
         userService.update(userNotExist);
     }
 
     @Test
-    public void update() throws SystemException {
+    public void updateSuccessful() throws SystemException {
         admin.setDateLastActive(new Date());
 
         User user = userService.update(admin);
@@ -102,11 +106,8 @@ public class UserServiceTest {
 
     @Test
     public void deleteUserNotExist() throws SystemException {
-        userService.delete(Long.parseLong("0"));
-    }
+        thrown.expect(SystemException.class);
 
-    @Ignore
-    @Test
-    public void delete() {
+        userService.delete(Long.parseLong("0"));
     }
 }

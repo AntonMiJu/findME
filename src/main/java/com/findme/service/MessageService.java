@@ -63,7 +63,7 @@ public class MessageService {
         messageDAO.update(message);
     }
 
-    private void validateWriteMessage(Message message) throws BadRequestException{
+    private void validateWriteMessage(Message message) throws SystemException, BadRequestException{
         if (relationshipService.get(message.getUserFrom().getId(), message.getUserTo().getId()) == null ||
                 !relationshipService.get(message.getUserFrom().getId(), message.getUserTo().getId()).getStatus().equals(RelationshipStatus.FRIENDS)) {
             log.error("Bad request. Users must be friends");
@@ -75,7 +75,7 @@ public class MessageService {
         }
     }
 
-    private void validateEdit(Message message) throws BadRequestException{
+    private void validateEdit(Message message) throws SystemException,BadRequestException{
         validateWriteMessage(message);
         if (message.getDateRead()!=null || message.getDateEdited()!=null || message.getDateDeleted()!=null){
             log.error("Bad request. Message is already read or edited or deleted.");

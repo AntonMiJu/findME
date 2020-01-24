@@ -30,7 +30,7 @@ public class RelationshipService {
         this.userDAO = userDAO;
     }
 
-    public Relationship get(Long userFromId, Long userToId) {
+    public Relationship get(Long userFromId, Long userToId) throws SystemException{
         log.info("RelationshipService get method");
         return relationshipDAO.get(userFromId, userToId);
     }
@@ -117,7 +117,7 @@ public class RelationshipService {
         chain.validate(date);
     }
 
-    private void validateDelete(Long userFromId, Long userToId) throws BadRequestException {
+    private void validateDelete(Long userFromId, Long userToId) throws SystemException, BadRequestException {
         Relationship relationship = relationshipDAO.get(userFromId, userToId);
         if (userFromId.equals(userToId) || !relationship.getStatus().equals(RelationshipStatus.FRIENDS)) {
             log.error("Deleting is failed");
