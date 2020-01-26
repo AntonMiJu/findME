@@ -1,11 +1,10 @@
 package com.findme.service;
 
+import com.findme.exceptions.BadRequestException;
 import com.findme.exceptions.SystemException;
 import com.findme.models.Relationship;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import com.findme.models.RelationshipStatus;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,48 +25,85 @@ public class RelationshipServiceTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private Relationship friends;
-    private Relationship requested;
-    private Relationship rejected;
-    private Relationship canceled;
-    private Relationship deleted;
-
     @Before
     public void setUp() throws Exception {
-        friends = relationshipService.get(Long.parseLong("1"), Long.parseLong("2"));
-        requested = relationshipService.get(Long.parseLong("1"), Long.parseLong("3"));
-        rejected = relationshipService.get(Long.parseLong("2"), Long.parseLong("4"));
-        canceled = relationshipService.get(Long.parseLong("2"), Long.parseLong("3"));
-        deleted = relationshipService.get(Long.parseLong("4"), Long.parseLong("3"));
     }
 
     @Test
-    public void getNotExist() throws SystemException{
+    public void getNotExist() throws SystemException {
         thrown.expect(SystemException.class);
 
         relationshipService.get(Long.parseLong("5"), Long.parseLong("2"));
     }
 
     @Test
-    public void getSuccessful() throws SystemException{
+    public void getSuccessful() throws SystemException {
         Relationship relationship = relationshipService.get(Long.parseLong("1"), Long.parseLong("2"));
 
-        Assert.assertEquals(friends, relationship);
+        Assert.assertEquals(RelationshipStatus.FRIENDS, relationship.getStatus());
     }
 
     @Test
-    public void getIncomeRequests() {
+    public void getIncomeRequestsIdNotInBD() throws SystemException {
+        thrown.expect(SystemException.class);
+
+        relationshipService.getIncomeRequests(Long.parseLong("1000000"));
     }
 
     @Test
-    public void getOutcomeRequests() {
+    public void getIncomeRequestsSuccessful() throws SystemException {
+        long i = 0;
+        for (Relationship re : relationshipService.getIncomeRequests(Long.parseLong("1"))) {
+            if (!re.getStatus().equals(RelationshipStatus.REQUESTED) &&
+                    re.getUserToId().getId().equals(Long.parseLong("1")))
+                i++;
+        }
+
+        Assert.assertEquals(0, i);
     }
 
+    @Test
+    public void getOutcomeRequestsIdNotInBD() throws SystemException {
+        thrown.expect(SystemException.class);
+
+        relationshipService.getOutcomeRequests(Long.parseLong("1000000"));
+    }
+
+    @Test
+    public void getOutcomeRequestsSuccessful() throws SystemException {
+        long i = 0;
+        for (Relationship re : relationshipService.getOutcomeRequests(Long.parseLong("1"))) {
+            if (!re.getStatus().equals(RelationshipStatus.REQUESTED) &&
+                    re.getUserFromId().getId().equals(Long.parseLong("1")))
+                i++;
+        }
+
+        Assert.assertEquals(0, i);
+    }
+
+    @Ignore
     @Test
     public void save() {
     }
 
     @Test
-    public void update() {
+    public void updateRelationshipThatDoesntExist() throws BadRequestException, SystemException {
+        thrown.expect(BadRequestException.class);
+
+        relationshipService.update(Long.parseLong("1"), Long.parseLong("1"), "DELETED");
+    }
+
+    @Test
+    public void updateWrongStatus() throws BadRequestException, SystemException {
+        thrown.expect(BadRequestException.class);
+
+        relationshipService.update(Long.parseLong("1"), Long.parseLong("2"), "REJECTED");
+    }
+
+    @Test
+    public void update() throws BadRequestException, SystemException {
+        Relationship relationship = relationshipService.update(Long.parseLong("1"), Long.parseLong("3"), "REJECTED");
+
+        Assert.assertEquals(RelationshipStatus.REJECTED, relationship.getStatus());
     }
 }

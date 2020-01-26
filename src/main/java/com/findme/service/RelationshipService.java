@@ -63,12 +63,11 @@ public class RelationshipService {
 
     public Relationship update(Long userFromId, Long userToId, String status) throws SystemException, BadRequestException {
         log.info("RelationshipService update method");
-        if (userFromId.equals(userToId) || relationshipDAO.get(userFromId, userToId) == null || relationshipDAO.get(userFromId, userToId).getStatus().toString().equals(status)) {
+        Relationship relationship = relationshipDAO.get(userFromId, userToId);
+        if (userFromId.equals(userToId) || relationship == null || relationship.getStatus().toString().equals(status)) {
             log.error("Updating is failed");
             throw new BadRequestException("400: Bad update logic.");
         }
-
-        Relationship relationship = relationshipDAO.get(userFromId, userToId);
 
         validateStatus(relationship.getStatus(), RelationshipStatus.valueOf(status));
 
@@ -90,7 +89,7 @@ public class RelationshipService {
         return relationshipDAO.update(relationship);
     }
 
-    private void validateStatus(RelationshipStatus relStatus, RelationshipStatus status) throws SystemException {
+    private void validateStatus(RelationshipStatus relStatus, RelationshipStatus status) throws BadRequestException {
         if (relStatus.equals(RelationshipStatus.REQUESTED) && (status.equals(RelationshipStatus.FRIENDS) ||
                 status.equals(RelationshipStatus.REJECTED) || status.equals(RelationshipStatus.CANCELED)))
             return;
@@ -102,7 +101,7 @@ public class RelationshipService {
                 relStatus.equals(RelationshipStatus.CANCELED)) && status.equals(RelationshipStatus.REQUESTED))
             return;
 
-        throw new SystemException("500: Wrong status update.");
+        throw new BadRequestException("400: Wrong status update.");
     }
 
     private void validateSave(Long userFromId, Long userToId) throws BadRequestException, SystemException {
